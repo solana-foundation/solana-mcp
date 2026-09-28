@@ -49,8 +49,6 @@ describe("logAnalytics", () => {
   it("routes tools/call to S3 logToolCallRequest with request metadata", async () => {
     await logAnalytics({
       event_type: "message_received",
-      request_id: "req-123",
-      session_id: "session-456",
       details: {
         body: JSON.stringify({
           method: "tools/call",
@@ -64,8 +62,8 @@ describe("logAnalytics", () => {
 
     expect(s3LogToolCallRequestMock).toHaveBeenCalledWith({
       toolName: "Solana_Documentation_Search",
-      requestId: "req-123",
-      sessionId: "session-456",
+      requestId: null,
+      sessionId: null,
       toolArgs: { query: "accounts" },
       rawBody: expect.objectContaining({ method: "tools/call" }),
     });
@@ -74,8 +72,6 @@ describe("logAnalytics", () => {
   it("redacts program_autofixer source and filename from request analytics", async () => {
     await logAnalytics({
       event_type: "message_received",
-      request_id: "req-123",
-      session_id: "session-456",
       details: {
         body: JSON.stringify({
           method: "tools/call",
@@ -98,8 +94,8 @@ describe("logAnalytics", () => {
     };
     expect(s3LogToolCallRequestMock).toHaveBeenCalledWith({
       toolName: "program_autofixer",
-      requestId: "req-123",
-      sessionId: "session-456",
+      requestId: null,
+      sessionId: null,
       toolArgs: expectedArgs,
       rawBody: {
         method: "tools/call",

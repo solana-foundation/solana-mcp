@@ -13,7 +13,7 @@ async function loadParser(): Promise<Parser> {
   return parser;
 }
 
-export async function getParser(): Promise<Parser> {
+async function getParser(): Promise<Parser> {
   if (!parserPromise) parserPromise = loadParser();
   return parserPromise;
 }

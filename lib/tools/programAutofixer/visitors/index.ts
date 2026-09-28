@@ -35,56 +35,39 @@ import { anchorCloseWithoutReceiver } from "./anchor-close-without-receiver.js";
  * Visitor registry. Numbered checks map to
  * pinocchio-security-analyzer/skills/pinocchio-security-patterns/references/vulnerability-catalog.md.
  *
- * Removed for chronic false positives (see git history): readonly-enforcement (Check 6),
- * signer-necessity (Check 3), writable-mutation (Check 5), bump-canonicalization (Check 10),
- * event-via-cpi (Check 21), anchor-emit-via-msg, anchor-manual-key-eq, anchor-account-not-interface.
- *
  * Account validation
- *   program-id-verification     → Check 1  (LOW)
- *   missing-owner               → Check 2  (HIGH)
- *   missing-signer              → Check 4  (CRITICAL)
- *   sysvar-spoofing             → Check 7  (MEDIUM)
+ *   program-id-verification     → Check 1
+ *   missing-owner               → Check 2
+ *   missing-signer              → Check 4
+ *   sysvar-spoofing             → Check 7
  *
  * PDA security
- *   pda-validation              → Check 8  (CRITICAL)
- *   pda-seed-collision          → Check 9  (MEDIUM)
+ *   pda-validation              → Check 8
+ *   pda-seed-collision          → Check 9
  *
  * Data integrity
- *   discriminator-check         → Check 11 (HIGH)
- *   data-size-validation        → Check 12 (HIGH)
- *   type-cosplay                → Check 13 (CRITICAL)
- *   unchecked-deserialization   → Check 14 (MEDIUM)
+ *   discriminator-check         → Check 11
+ *   data-size-validation        → Check 12
+ *   type-cosplay                → Check 13
+ *   unchecked-deserialization   → Check 14
  *
  * Account lifecycle
- *   reinitialization            → Check 15 (MEDIUM)
- *   existing-lamports           → Check 16 (MEDIUM)
- *   rent-exempt                 → Check 17 (MEDIUM)
- *   account-closure             → Check 23 (CRITICAL)
+ *   reinitialization            → Check 15
+ *   existing-lamports           → Check 16
+ *   rent-exempt                 → Check 17
+ *   account-closure             → Check 23
  *
  * CPI security
- *   arbitrary-cpi               → Check 18 (CRITICAL)
- *   authority-escalation        → Check 19 (HIGH)
+ *   arbitrary-cpi               → Check 18
+ *   authority-escalation        → Check 19
  *
  * Code quality
- *   unchecked-arithmetic        → Check 20 (MEDIUM)
- *   token-2022-extensions       → Check 22 (MEDIUM)
- *   instruction-data-bounds     → Check 24 (HIGH)
- *   unsafe-unwrap               → Check 25 (LOW)
- *   account-relationship        → Check 26 (LOW)
- *   account-borrow              → Check 27 (LOW)
- *
- * Anchor account constraints
- *   anchor-seeds-without-bump    (HIGH)
- *   anchor-init-without-space    (HIGH)
- *   anchor-init-without-payer    (CRITICAL)
- *   anchor-realloc-incomplete    (MEDIUM)
- *   anchor-unchecked-account     (LOW)
- *
- * Anchor account types and handler checks
- *   anchor-manual-signer-check   (LOW)      — .is_signer on a ctx.accounts field inside #[program] mod
- *   anchor-missing-mut             (HIGH)     — ctx.accounts.X mutated, struct field lacks `mut`
- *   anchor-cpi-context-unverified  (HIGH)     — CpiContext::new(<untyped account>, ...) without typed Program/Interface
- *   anchor-close-without-receiver  (CRITICAL) — manual lamport drain without `close = ...` constraint
+ *   unchecked-arithmetic        → Check 20
+ *   token-2022-extensions       → Check 22
+ *   instruction-data-bounds     → Check 24
+ *   unsafe-unwrap               → Check 25
+ *   account-relationship        → Check 26
+ *   account-borrow              → Check 27
  */
 export const allVisitors: readonly Visitor[] = [
   missingSigner,

@@ -17,7 +17,6 @@ interface SqlExecuteResponse {
 
 const COLUMNS = ["url", "title", "heading_path", "content"] as const;
 const STATEMENT_TIMEOUT = "30s";
-const POLL_MAX_ATTEMPTS = 6;
 const POLL_BACKOFF_MS = [500, 1000, 2000, 4000, 8000, 8000];
 
 function resolveDocsTable(): string | null {
@@ -32,14 +31,10 @@ function resolveDocsTable(): string | null {
   return null;
 }
 
-function resolveWarehouse(): string | null {
-  return process.env.DATABRICKS_WAREHOUSE_ID ?? null;
-}
-
-export async function getChunksForSource(sourceId: string, limit = 200): Promise<SourceChunk[]> {
+export async function getChunksForSource(sourceId: string): Promise<SourceChunk[]> {
   if (!isDatabricksConfigured()) return [];
   const table = resolveDocsTable();
-  const warehouse = resolveWarehouse();
+  const warehouse = process.env.DATABRICKS_WAREHOUSE_ID;
   if (!table || !warehouse) return [];
 
   const statement = `
@@ -47,7 +42,7 @@ export async function getChunksForSource(sourceId: string, limit = 200): Promise
     FROM ${table}
     WHERE source_id = :source_id
     ORDER BY url ASC, heading_path ASC, id ASC
-    LIMIT ${Number(limit)}
+    LIMIT 200
   `;
 
   let res = await dbxFetch<SqlExecuteResponse>("/api/2.0/sql/statements", {
@@ -60,9 +55,9 @@ export async function getChunksForSource(sourceId: string, limit = 200): Promise
     }),
   });
 
-  for (let attempt = 0; attempt < POLL_MAX_ATTEMPTS && isPending(res.status?.state); attempt++) {
+  for (let attempt = 0; attempt < POLL_BACKOFF_MS.length && isPending(res.status?.state); attempt++) {
     if (!res.statement_id) break;
-    await sleep(POLL_BACKOFF_MS[attempt] ?? POLL_BACKOFF_MS[POLL_BACKOFF_MS.length - 1]);
+    await sleep(POLL_BACKOFF_MS[attempt]);
     res = await dbxFetch<SqlExecuteResponse>(`/api/2.0/sql/statements/${encodeURIComponent(res.statement_id)}`);
   }
 

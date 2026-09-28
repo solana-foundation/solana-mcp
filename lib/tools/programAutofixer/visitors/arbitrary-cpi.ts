@@ -1,6 +1,6 @@
 import type { Node, Tree } from "web-tree-sitter";
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { findAll, getCallName, walk } from "../walk.js";
 import {
   KEY_MARKERS,
@@ -258,9 +258,7 @@ export const arbitraryCpi: Visitor = {
       if (builtByLocalHardcodedBuilder(ctx.tree, candidates)) return;
       if (invokeUsesVerifiedProgram(node, verifiedProgramsBefore(scope, node.startIndex))) return;
       if (programAccountVerified(ctx.tree.rootNode, node)) return;
-      ctx.output.issues.push({
-        severity: "critical",
-        rule: "arbitrary-cpi",
+      report(ctx, arbitraryCpi, {
         title: `Unverified program in ${name}()`,
         location: formatLocation(ctx.filename, node),
         description: `\`${name}\` is called inside a function that never verifies the target program's address (no \`verify_program_id\` or \`verify_<spl>_program\` call, no hard-coded \`<crate>::ID\`). An attacker can substitute a malicious program and intercept the CPI.`,

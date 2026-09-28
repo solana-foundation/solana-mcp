@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { findFirst, getCallName, walk } from "../walk.js";
 import {
   containsIdentifier,
@@ -280,9 +280,7 @@ export const pdaValidation: Visitor = {
 
       if (scopeValidatesPda(scope, pdaVars)) return;
 
-      ctx.output.issues.push({
-        severity: "critical",
-        rule: "pda-validation",
+      report(ctx, pdaValidation, {
         title: `PDA derived but not validated`,
         location: formatLocation(ctx.filename, node),
         description: `\`${name}\` derives a program address but the result is never compared to the account that was passed in. Without that comparison the caller can supply an arbitrary account claiming to be the PDA.`,

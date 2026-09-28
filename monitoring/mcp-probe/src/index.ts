@@ -84,13 +84,7 @@ async function handleRunRequest(res: ServerResponse): Promise<void> {
   });
 
   if (result.ok) {
-    sendJsonResponse(res, 200, {
-      ok: true,
-      targetUrl: result.targetUrl,
-      attempts: result.attempts,
-      toolCount: result.toolCount,
-      totalLatencyMs: result.totalLatencyMs,
-    });
+    sendJsonResponse(res, 200, result);
     return;
   }
 
@@ -111,16 +105,12 @@ function createProbeClient(targetUrl: URL): ProbeClient {
   const transport = new StreamableHTTPClientTransport(targetUrl);
 
   return {
-    connect: async () => {
-      await client.connect(transport);
-    },
+    connect: () => client.connect(transport),
     listTools: async () => {
       const result = await client.listTools();
       return { tools: result.tools.map(tool => ({ name: tool.name })) };
     },
-    close: async () => {
-      await client.close();
-    },
+    close: () => client.close(),
   };
 }
 

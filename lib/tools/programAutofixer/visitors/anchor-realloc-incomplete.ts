@@ -1,5 +1,5 @@
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 
 export const anchorReallocIncomplete: Visitor = {
   name: "anchor-realloc-incomplete",
@@ -21,9 +21,7 @@ export const anchorReallocIncomplete: Visitor = {
         if (!attr.kvPairs.has("realloc::payer") && !attr.kvPairs.has("realloc_payer")) missing.push("realloc::payer");
         if (!attr.kvPairs.has("realloc::zero") && !attr.kvPairs.has("realloc_zero")) missing.push("realloc::zero");
         if (missing.length === 0) continue;
-        ctx.output.issues.push({
-          severity: "medium",
-          rule: "anchor-realloc-incomplete",
+        report(ctx, anchorReallocIncomplete, {
           title: `\`realloc\` on ${struct.name}.${field.name} missing ${missing.join(" + ")}`,
           location: formatLocation(ctx.filename, attr.attributeNode),
           description: `Field \`${field.name}\` uses \`realloc\` but the \`#[account(...)]\` attribute is missing ${missing.map(m => `\`${m}\``).join(" and ")}. \`realloc::payer\` is required to fund the new size; \`realloc::zero\` controls whether new bytes are zeroed.`,

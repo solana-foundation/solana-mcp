@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor, VisitorContext } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { isRejectingGuard } from "./_helpers.js";
 
 const TOKEN_2022_MARKERS = new Set([
@@ -85,9 +85,7 @@ export const token2022Extensions: Visitor = {
     if (state.checked) return;
     const processingHint = state.hints.find(hintIndicatesProcessing);
     if (!processingHint) return;
-    ctx.output.issues.push({
-      severity: "medium",
-      rule: "token-2022-extensions",
+    report(ctx, token2022Extensions, {
       title: `Token-2022 used without extension safety check`,
       location: formatLocation(ctx.filename, processingHint),
       description: `This program processes Token-2022 accounts (\`${processingHint.text}\`) but never inspects extensions (\`get_extension\`, \`get_extension_types\`, \`StateWithExtensions\`, or a safety helper like \`verify_safe_mint\`). Token-2022 mints may carry dangerous extensions — \`TransferFee\`, \`TransferHook\`, \`PermanentDelegate\`, \`ConfidentialTransfer\`, \`DefaultAccountState: Frozen\` — that change transfer semantics in ways callers don't expect.`,

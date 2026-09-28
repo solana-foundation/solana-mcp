@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor, VisitorContext } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { getCallName, walk } from "../walk.js";
 import {
   bodyContainsSignerValidationFor,
@@ -253,9 +253,7 @@ export const authorityEscalation: Visitor = {
         return;
       }
       if (functionAuthorizesAuthorityMutation(scope, node.startIndex, stateRoot, field.text, seedSigners)) return;
-      ctx.output.issues.push({
-        severity: "high",
-        rule: "authority-escalation",
+      report(ctx, authorityEscalation, {
         title: `Write to ${field.text} without preceding signer check`,
         location: formatLocation(ctx.filename, node),
         description: `\`${left.text} = ...\` mutates an authority/admin field but no \`verify_signer\` call appears earlier in the same function. Without checking the current authority signed off, any caller can rotate the authority.`,

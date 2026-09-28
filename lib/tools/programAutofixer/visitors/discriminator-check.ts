@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { findFirst } from "../walk.js";
 import { DISCRIMINATOR_CALLS, DISCRIMINATOR_MARKERS, isFromBytesCall } from "./_helpers.js";
 import { fromBytesTargetValidated } from "./missing-owner.js";
@@ -29,9 +29,7 @@ export const discriminatorCheck: Visitor = {
       if (!info || !info.receiver) return;
       if (!fileHasDiscriminatorScheme(node.tree.rootNode)) return;
       if (fromBytesTargetValidated(node, ctx, DISCRIMINATOR_CALLS, DISCRIMINATOR_MARKERS)) return;
-      ctx.output.issues.push({
-        severity: "high",
-        rule: "discriminator-check",
+      report(ctx, discriminatorCheck, {
         title: `Missing discriminator validation for ${info.receiver}`,
         location: formatLocation(ctx.filename, node),
         description: `Account \`${info.receiver}\` is deserialized via \`from_bytes\` without a preceding \`validate_discriminator(...)\`. Two distinct account types with the same size become interchangeable to an attacker.`,

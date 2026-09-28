@@ -1,6 +1,6 @@
 import type { Node, Tree } from "web-tree-sitter";
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { findAll, findFirst, getCallName, walk } from "../walk.js";
 import {
   bodyContainsSignerValidationFor,
@@ -86,9 +86,7 @@ export const missingSigner: Visitor = {
         if (bodyContainsSignerValidationFor(tree.rootNode, account)) continue;
         if (rejectingKeyCheckAgainst(tree.rootNode, account, pdaVars)) continue;
         if (validatedByLocalHelper(tree, body, account)) continue;
-        ctx.output.issues.push({
-          severity: "critical",
-          rule: "missing-signer",
+        report(ctx, missingSigner, {
           title: `Missing signer check for ${account}`,
           location: formatLocation(ctx.filename, body),
           description: `Account \`${account}\` in \`${implName}::try_from\` looks like an authority but has no signer validation. An unsigned account here lets anyone perform the action.`,

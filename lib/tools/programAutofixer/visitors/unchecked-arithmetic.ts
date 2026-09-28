@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { walk } from "../walk.js";
 import {
   CHECKED_ARITHMETIC_METHODS,
@@ -168,9 +168,7 @@ function handleArithmetic(node: Node, ctx: import("../types.js").VisitorContext)
   if (baseOp === "-" && subtractionGuardedInBody(node, left, right)) return;
 
   const opName = baseOp === "+" ? "add" : baseOp === "-" ? "sub" : "mul";
-  ctx.output.issues.push({
-    severity: "medium",
-    rule: "unchecked-arithmetic",
+  report(ctx, uncheckedArithmetic, {
     title: `Unchecked integer ${opName}`,
     location: formatLocation(ctx.filename, node),
     description: `Plain \`${baseOp}\` on a balance-shaped value panics on overflow in debug and wraps silently in release. For balance / amount math this is exploitable.`,

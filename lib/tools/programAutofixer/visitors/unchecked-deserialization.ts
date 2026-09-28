@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { walk } from "../walk.js";
 import {
   LEN_MARKERS,
@@ -92,9 +92,7 @@ export const uncheckedDeserialization: Visitor = {
       if (isInsideUncheckedFn(node)) return;
       const body = findEnclosingFunctionBody(node);
       if (body && bodyHasLenValidationBefore(body, node.startIndex)) return;
-      ctx.output.issues.push({
-        severity: "medium",
-        rule: "unchecked-deserialization",
+      report(ctx, uncheckedDeserialization, {
         title: `Raw pointer cast without length validation`,
         location: formatLocation(ctx.filename, node),
         description: `Casting bytes to a typed pointer (\`as *const T\` / \`as *mut T\`) bypasses length and discriminator validation. Validate the buffer length first, or keep raw casts inside a private \`from_bytes_unchecked\` (or similarly \`*_unchecked\`) helper that callers reach only via a safe wrapper.`,

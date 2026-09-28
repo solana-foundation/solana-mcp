@@ -1,10 +1,7 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
+import { setTimeout as delay } from "node:timers/promises";
 
-/**
- * Configuration for a single MCP probe execution.
- */
 export type ProbeConfig = {
-  /** Target MCP endpoint URL. */
   readonly targetUrl: string;
   /** Number of total attempts before the probe is considered failed. */
   readonly maxRetries: number;
@@ -12,41 +9,25 @@ export type ProbeConfig = {
   readonly timeoutMs: number;
   /** Base delay between retries. Each retry waits `backoffMs * attempt`. */
   readonly backoffMs: number;
-  /** Minimum number of tools expected from the MCP server. */
   readonly minTools: number;
 };
 
-/**
- * Lightweight tool shape returned by the MCP SDK.
- */
 export type ProbeTool = {
   readonly name: string;
 };
 
-/**
- * Result returned by a probe client's `listTools` call.
- */
 export type ProbeListToolsResult = {
   readonly tools: readonly ProbeTool[];
 };
 
-/**
- * Minimal MCP client contract required by the probe runner.
- */
 export type ProbeClient = {
   connect: () => Promise<void>;
   listTools: () => Promise<ProbeListToolsResult>;
   close: () => Promise<void>;
 };
 
-/**
- * Creates a probe client for the target MCP endpoint.
- */
 export type ProbeClientFactory = (targetUrl: URL) => ProbeClient;
 
-/**
- * Structured log record emitted by the probe runner.
- */
 export type ProbeLogRecord = {
   readonly severity: "INFO" | "WARNING" | "ERROR";
   readonly event:
@@ -73,9 +54,6 @@ export type ProbeLogRecord = {
   readonly timestamp: string;
 };
 
-/**
- * Success payload returned by the probe runner.
- */
 export type ProbeSuccess = {
   readonly ok: true;
   readonly targetUrl: string;
@@ -84,9 +62,6 @@ export type ProbeSuccess = {
   readonly totalLatencyMs: number;
 };
 
-/**
- * Failure payload returned by the probe runner.
- */
 export type ProbeFailure = {
   readonly ok: false;
   readonly targetUrl: string;
@@ -95,43 +70,23 @@ export type ProbeFailure = {
   readonly error: string;
 };
 
-/**
- * Result payload returned by the probe runner.
- */
 export type ProbeResult = ProbeSuccess | ProbeFailure;
 
-/**
- * Dependencies injected into the probe runner for testability.
- */
 export type ProbeDependencies = {
   readonly clientFactory: ProbeClientFactory;
   readonly sleep?: (ms: number) => Promise<void>;
   readonly now?: () => number;
-  readonly timestamp?: () => string;
   readonly log?: (record: ProbeLogRecord) => void;
 };
 
-/**
- * Thrown when probe configuration is invalid.
- */
 export class ProbeConfigurationError extends Error {
   name = "ProbeConfigurationError";
 }
 
-/**
- * Thrown when the MCP endpoint returns an unexpected tool list.
- */
 export class ProbeValidationError extends Error {
   name = "ProbeValidationError";
 }
 
-/**
- * Resolves probe configuration from environment variables.
- *
- * @param env - Environment variables provided to the process.
- * @return Validated probe configuration.
- * @throws {ProbeConfigurationError} When any value is missing or invalid.
- */
 export function resolveProbeConfig(env: NodeJS.ProcessEnv): ProbeConfig {
   return {
     targetUrl: resolveRequiredUrl(env.MCP_PROBE_TARGET_URL ?? "https://mcp.solana.com/mcp", "MCP_PROBE_TARGET_URL"),
@@ -142,17 +97,9 @@ export function resolveProbeConfig(env: NodeJS.ProcessEnv): ProbeConfig {
   };
 }
 
-/**
- * Executes the MCP probe with retries and structured logging.
- *
- * @param config - Probe runtime configuration.
- * @param dependencies - External dependencies for client creation and timing.
- * @return Probe result indicating success or failure.
- */
 export async function runProbe(config: ProbeConfig, dependencies: ProbeDependencies): Promise<ProbeResult> {
-  const sleep = dependencies.sleep ?? defaultSleep;
+  const sleep = dependencies.sleep ?? delay;
   const now = dependencies.now ?? Date.now;
-  const timestamp = dependencies.timestamp ?? (() => new Date().toISOString());
   const log = dependencies.log ?? (() => {});
   const startedAt = now();
   const targetUrl = new URL(config.targetUrl);
@@ -166,7 +113,7 @@ export async function runProbe(config: ProbeConfig, dependencies: ProbeDependenc
     timeout_ms: config.timeoutMs,
     backoff_ms: config.backoffMs,
     min_tools: config.minTools,
-    timestamp: timestamp(),
+    timestamp: new Date().toISOString(),
   });
 
   for (let attempt = 1; attempt <= config.maxRetries; attempt += 1) {
@@ -197,7 +144,7 @@ export async function runProbe(config: ProbeConfig, dependencies: ProbeDependenc
         attempts: attempt,
         tool_count: toolCount,
         latency_ms: latencyMs,
-        timestamp: timestamp(),
+        timestamp: new Date().toISOString(),
       });
 
       return {
@@ -217,7 +164,7 @@ export async function runProbe(config: ProbeConfig, dependencies: ProbeDependenc
         max_retries: config.maxRetries,
         error_message: lastErrorMessage,
         latency_ms: now() - attemptStartedAt,
-        timestamp: timestamp(),
+        timestamp: new Date().toISOString(),
       });
     } finally {
       try {
@@ -229,7 +176,7 @@ export async function runProbe(config: ProbeConfig, dependencies: ProbeDependenc
           target_url: config.targetUrl,
           attempt,
           error_message: error instanceof Error ? error.message : String(error),
-          timestamp: timestamp(),
+          timestamp: new Date().toISOString(),
         });
       }
     }
@@ -247,7 +194,7 @@ export async function runProbe(config: ProbeConfig, dependencies: ProbeDependenc
     attempts: config.maxRetries,
     error_message: lastErrorMessage,
     latency_ms: totalLatencyMs,
-    timestamp: timestamp(),
+    timestamp: new Date().toISOString(),
   });
 
   return {
@@ -259,13 +206,6 @@ export async function runProbe(config: ProbeConfig, dependencies: ProbeDependenc
   };
 }
 
-/**
- * Writes a JSON response to the HTTP server.
- *
- * @param res - Node HTTP response.
- * @param statusCode - HTTP status code.
- * @param body - JSON body to serialize.
- */
 export function sendJsonResponse(res: ServerResponse, statusCode: number, body: Record<string, unknown>): void {
   const payload = JSON.stringify(body);
   res.statusCode = statusCode;
@@ -274,28 +214,14 @@ export function sendJsonResponse(res: ServerResponse, statusCode: number, body: 
   res.end(payload);
 }
 
-/**
- * Reads and discards a request body so the connection can be cleanly reused.
- *
- * @param req - Incoming Node HTTP request.
- */
 export async function drainRequest(req: IncomingMessage): Promise<void> {
   await new Promise<void>((resolve, reject) => {
     req.on("error", reject);
-    req.on("data", () => {
-      // Intentionally ignored.
-    });
+    req.on("data", () => {});
     req.on("end", resolve);
   });
 }
 
-/**
- * Returns a structured invalid-request response and emits a log record.
- *
- * @param req - Incoming request that could not be served.
- * @param res - Outgoing response object.
- * @param log - Log sink.
- */
 export async function handleInvalidRequest(
   req: IncomingMessage,
   res: ServerResponse,
@@ -326,10 +252,6 @@ function resolvePositiveInteger(value: string | undefined, fallback: number, fie
     throw new ProbeConfigurationError(`${field} must be a positive integer.`);
   }
   return resolvedValue;
-}
-
-function defaultSleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function withTimeout<T>(promise: Promise<T>, timeoutMs: number, errorMessage: string): Promise<T> {

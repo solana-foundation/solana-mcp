@@ -1,5 +1,5 @@
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { ctxAccountsField, isInsideProgramModule } from "./_anchor-helpers.js";
 
 export const anchorManualSignerCheck: Visitor = {
@@ -22,9 +22,7 @@ export const anchorManualSignerCheck: Visitor = {
       // remaining_accounts / loop-variable checks have no declarative equivalent.
       const accountField = ctxAccountsField(receiver);
       if (!accountField) return;
-      ctx.output.issues.push({
-        severity: "low",
-        rule: "anchor-manual-signer-check",
+      report(ctx, anchorManualSignerCheck, {
         title: `Manual \`is_signer\` check on ctx.accounts.${accountField}`,
         location: formatLocation(ctx.filename, node),
         description: `Accessing \`.is_signer\` on \`ctx.accounts.${accountField}\` inside a handler re-implements what Anchor's typed \`Signer<'info>\` (or a \`signer\` constraint) already enforces. Manual checks are easy to forget or invert, and bypass the framework's compile-time guarantees.`,

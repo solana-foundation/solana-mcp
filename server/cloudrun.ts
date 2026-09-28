@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { join } from "node:path";
 
-import { flushAnalytics } from "../lib/analytics";
+import { flushAnalytics } from "../lib/services/s3/analytics";
 import { handleMcpRequest } from "../lib/handler";
 
 const PORT = Number(process.env.PORT ?? 8080);

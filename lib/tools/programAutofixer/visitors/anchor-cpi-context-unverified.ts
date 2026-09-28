@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { ctxAccountsField, findFieldsForHandlerContext, isInsideProgramModule } from "./_anchor-helpers.js";
 import { walk } from "../walk.js";
 
@@ -126,9 +126,7 @@ export const anchorCpiContextUnverified: Visitor = {
       if (anyConstrained) return;
       const fn = node.childForFieldName("function");
       const tail = fn?.lastChild?.text ?? "new";
-      ctx.output.issues.push({
-        severity: "high",
-        rule: "anchor-cpi-context-unverified",
+      report(ctx, anchorCpiContextUnverified, {
         title: `CpiContext::${tail} uses untyped program account ${field}`,
         location: formatLocation(ctx.filename, node),
         description: `\`CpiContext::${tail}\` is called with \`ctx.accounts.${field}.to_account_info()\` but \`${field}\` is typed as \`AccountInfo\` / \`UncheckedAccount\`. The Anchor runtime cannot verify the program ID before invoking the CPI — an attacker can swap in a malicious program.`,

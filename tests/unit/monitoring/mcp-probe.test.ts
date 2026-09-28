@@ -18,14 +18,13 @@ type ProbeResult = import("../../../monitoring/mcp-probe/src/probe.js", {
 }).ProbeResult;
 
 let ProbeConfigurationError: ProbeModule["ProbeConfigurationError"];
-let ProbeValidationError: ProbeModule["ProbeValidationError"];
 let resolveProbeConfig: ProbeModule["resolveProbeConfig"];
 let runProbe: ProbeModule["runProbe"];
 let handleInvalidRequest: ProbeModule["handleInvalidRequest"];
 
 beforeAll(async () => {
   const probeModule = await import("../../../monitoring/mcp-probe/src/probe.js");
-  ({ ProbeConfigurationError, ProbeValidationError, resolveProbeConfig, runProbe, handleInvalidRequest } = probeModule);
+  ({ ProbeConfigurationError, resolveProbeConfig, runProbe, handleInvalidRequest } = probeModule);
 });
 
 describe("resolveProbeConfig", () => {
@@ -271,35 +270,6 @@ describe("runProbe", () => {
         error_message: "close failed",
       }),
     );
-  });
-
-  it("uses a validation error when the returned tool count is below the threshold", async () => {
-    const clientFactory = createClientFactory([
-      {
-        connect: vi.fn().mockResolvedValue(undefined),
-        listTools: vi.fn().mockResolvedValue({ tools: [] }),
-        close: vi.fn().mockResolvedValue(undefined),
-      },
-    ]);
-
-    const result = await runProbe(
-      {
-        targetUrl: "https://mcp.solana.com/mcp",
-        maxRetries: 1,
-        timeoutMs: 1000,
-        backoffMs: 10,
-        minTools: 1,
-      },
-      {
-        clientFactory,
-        now: createNowMock([0, 5, 10, 15]),
-      },
-    );
-
-    assertFailureResult(result);
-    expect(() => {
-      throw new ProbeValidationError(result.error);
-    }).toThrow(ProbeValidationError);
   });
 });
 

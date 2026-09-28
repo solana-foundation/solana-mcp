@@ -1,5 +1,5 @@
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 
 export const anchorSeedsWithoutBump: Visitor = {
   name: "anchor-seeds-without-bump",
@@ -18,9 +18,7 @@ export const anchorSeedsWithoutBump: Visitor = {
         if (!hasSeeds) continue;
         const hasBump = attr.keywords.has("bump") || attr.kvPairs.has("bump");
         if (hasBump) continue;
-        ctx.output.issues.push({
-          severity: "high",
-          rule: "anchor-seeds-without-bump",
+        report(ctx, anchorSeedsWithoutBump, {
           title: `\`seeds\` declared on ${struct.name}.${field.name} without \`bump\``,
           location: formatLocation(ctx.filename, attr.attributeNode),
           description: `Field \`${field.name}\` carries a \`seeds = [...]\` constraint but no \`bump\` (canonical bump) or \`bump = ...\` (stored bump). In Anchor >= 0.25 this is a compile error; in older versions it allows non-canonical bumps to satisfy the PDA constraint at runtime.`,

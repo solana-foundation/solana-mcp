@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import {
   collectCtxAccountsAccesses,
   ctxAccountsField,
@@ -108,9 +108,7 @@ export const anchorCloseWithoutReceiver: Visitor = {
         const hasClose = candidates.some(f => f.attribute?.kvPairs.has("close"));
         if (hasClose) continue;
         if (body && bodyManuallyClosesAccount(body, fieldName)) continue;
-        ctx.output.issues.push({
-          severity: "critical",
-          rule: "anchor-close-without-receiver",
+        report(ctx, anchorCloseWithoutReceiver, {
           title: `Manual lamport drain on ${fieldName} without \`close = ...\` constraint`,
           location: formatLocation(ctx.filename, node),
           description: `\`ctx.accounts.${fieldName}\` is having its lamports set to 0 in a handler, but the Accounts struct doesn't declare \`#[account(close = <receiver>)]\` for this field. Without \`close\`, Anchor won't reassign the account to the system program and zero its data buffer — the account remains usable in the same transaction (reload attack).`,

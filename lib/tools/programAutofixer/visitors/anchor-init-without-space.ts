@@ -1,5 +1,5 @@
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import type { ParsedAccountAttr } from "./_anchor-helpers.js";
 
 const SPL_INIT_CONSTRAINTS = new Set([
@@ -40,9 +40,7 @@ export const anchorInitWithoutSpace: Visitor = {
         // Zero-copy accounts declare space via the struct's `#[account(zero_copy)]` attribute on the data type;
         // skip flagging when the field type is wrapped in AccountLoader.
         if (field.typeIdentifier === "AccountLoader") continue;
-        ctx.output.issues.push({
-          severity: "high",
-          rule: "anchor-init-without-space",
+        report(ctx, anchorInitWithoutSpace, {
           title: `\`init\` on ${struct.name}.${field.name} without \`space\``,
           location: formatLocation(ctx.filename, attr.attributeNode),
           description: `Field \`${field.name}\` uses \`init\` (or \`init_if_needed\`) but the \`#[account(...)]\` attribute is missing \`space = ...\`. Without an explicit space, Anchor cannot allocate the account at the correct size.`,

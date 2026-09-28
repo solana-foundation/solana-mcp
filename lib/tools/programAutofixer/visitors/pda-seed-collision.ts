@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor, VisitorContext } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { findFirst, getCallName } from "../walk.js";
 import { getCallArgs } from "./_helpers.js";
 
@@ -160,9 +160,7 @@ export const pdaSeedCollision: Visitor = {
         const signatures = usingDerivations.map(d => derivationSignature(d, entries));
         if (!hasDuplicate(signatures)) continue;
         for (const e of group) {
-          ctx.output.issues.push({
-            severity: "medium",
-            rule: "pda-seed-collision",
+          report(ctx, pdaSeedCollision, {
             title: `Duplicate PDA seed prefix ${value} on ${uniqueOwners.join(", ")}`,
             location: formatLocation(ctx.filename, e.node),
             description: `\`${e.ownerType}\` shares the seed prefix ${value} with ${uniqueOwners
@@ -176,9 +174,7 @@ export const pdaSeedCollision: Visitor = {
         continue;
       }
       for (const e of group) {
-        ctx.output.issues.push({
-          severity: "medium",
-          rule: "pda-seed-collision",
+        report(ctx, pdaSeedCollision, {
           title: `Duplicate PDA seed prefix ${value} on ${uniqueOwners.join(", ")}`,
           location: formatLocation(ctx.filename, e.node),
           description: `\`${e.ownerType}\` shares the seed prefix ${value} with ${uniqueOwners

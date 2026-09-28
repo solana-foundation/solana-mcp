@@ -9,7 +9,7 @@ const YAML_PATH = resolve(REPO_ROOT, "ingestion/sources.yaml");
 const OUT_PATH = resolve(REPO_ROOT, "lib/sources.generated.ts");
 
 // Section taxonomy is owned by lib/sources.types.ts. The TS-side
-// `freezeSources` runtime check in lib/sources.ts catches any unknown tag at
+// `assertKnownSections` runtime check in lib/sources.ts catches any unknown tag at
 // server boot (and during the test suite). Re-listing it here would just
 // invite drift, so we only validate structural shape below.
 const ALLOWED_KINDS = new Set(["github", "web", "openapi"]);

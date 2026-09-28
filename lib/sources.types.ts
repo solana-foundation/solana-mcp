@@ -1,27 +1,4 @@
-export type SectionId =
-  | "core"
-  | "programs"
-  | "frameworks"
-  | "clients"
-  | "tokens"
-  | "nft"
-  | "defi"
-  | "liquid-staking"
-  | "oracles"
-  | "infra"
-  | "data"
-  | "wallets"
-  | "mobile"
-  | "governance"
-  | "testing"
-  | "tooling"
-  | "zk"
-  | "bridges"
-  | "identity"
-  | "examples"
-  | "vm";
-
-export const SECTION_IDS: readonly SectionId[] = [
+export const SECTION_IDS = [
   "core",
   "programs",
   "frameworks",
@@ -44,6 +21,8 @@ export const SECTION_IDS: readonly SectionId[] = [
   "examples",
   "vm",
 ] as const;
+
+export type SectionId = (typeof SECTION_IDS)[number];
 
 export const SECTION_DESCRIPTIONS: Readonly<Record<SectionId, string>> = {
   core: "Solana protocol fundamentals (accounts, txs, fees, rent, sysvars).",

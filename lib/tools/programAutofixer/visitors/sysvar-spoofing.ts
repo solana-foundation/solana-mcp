@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { getCallName, walk } from "../walk.js";
 import {
   KEY_MARKERS,
@@ -83,9 +83,7 @@ export const sysvarSpoofing: Visitor = {
         if (bodyContainsVerifyFor(tree.rootNode, SYSVAR_VERIFY_CALLS, account)) continue;
         if (fileHasValidatingConstructorFor(tree.rootNode, account)) continue;
         if (bodyContainsRejectingCheckFor(tree.rootNode, account, KEY_MARKERS)) continue;
-        ctx.output.issues.push({
-          severity: "medium",
-          rule: "sysvar-spoofing",
+        report(ctx, sysvarSpoofing, {
           title: `Sysvar account ${account} not verified`,
           location: formatLocation(ctx.filename, body),
           description: `\`${implName}::try_from\` accepts \`${account}\` as a sysvar without comparing its address to the known sysvar ID, and the account's data is read. Any account can be passed and read as a sysvar.`,
