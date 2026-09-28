@@ -3,28 +3,9 @@ import { createServer, IncomingMessage, ServerResponse, type Server } from "node
 import { Client, StreamableHTTPClientTransport } from "@modelcontextprotocol/client";
 import { AddressInfo } from "node:net";
 import { createMcp } from "../lib";
-import type { SolanaTool } from "../lib/tools/types";
-import * as generalSolanaToolsModule from "../lib/tools/generalSolanaTools";
+import { createSolanaTools } from "../lib/tools/generalSolanaTools";
 
-function resolveGeneralSolanaTools(): SolanaTool[] {
-  const moduleExports = generalSolanaToolsModule as Record<string, unknown>;
-
-  if (Array.isArray(moduleExports.generalSolanaTools)) {
-    return moduleExports.generalSolanaTools as SolanaTool[];
-  }
-
-  const createSolanaTools = moduleExports.createSolanaTools;
-  if (typeof createSolanaTools === "function") {
-    const createdTools = (createSolanaTools as (model: unknown | null) => unknown)(null);
-    if (Array.isArray(createdTools)) {
-      return createdTools as SolanaTool[];
-    }
-  }
-
-  return [];
-}
-
-const registeredToolNames = resolveGeneralSolanaTools().map(tool => tool.title);
+const registeredToolNames = createSolanaTools().map(tool => tool.title);
 
 describe("e2e", () => {
   let server: Server;

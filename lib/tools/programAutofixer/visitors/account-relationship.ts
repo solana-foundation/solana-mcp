@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { walk } from "../walk.js";
 import { getCallName } from "../walk.js";
 import { findEnclosingFunctionBody, getMacroName, getMethodCallName, macroIdentifiers } from "./_helpers.js";
@@ -154,9 +154,7 @@ export const accountRelationship: Visitor = {
       const scope = findEnclosingFunctionBody(node);
       if (!scope) return;
       if (scopeValidatesRelationship(scope)) return;
-      ctx.output.issues.push({
-        severity: "low",
-        rule: "account-relationship",
+      report(ctx, accountRelationship, {
         title: `${info.name} CPI without relationship validation`,
         location: formatLocation(ctx.filename, node),
         description: `\`${info.name}\` is invoked but no \`validate_associated_token_account\` / \`verify_token_account\` / \`verify_mint\` call (or inline mint/owner comparison) appears in this function. Token accounts must be tied to the expected wallet+mint; otherwise an attacker can supply an arbitrary mint and drain the wrong account.`,

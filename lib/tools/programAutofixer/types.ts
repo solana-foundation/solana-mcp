@@ -56,6 +56,14 @@ export interface Visitor {
   after?(ctx: VisitorContext): void;
 }
 
+export function report(
+  ctx: VisitorContext,
+  visitor: Visitor,
+  issue: Pick<Issue, "title" | "location" | "description" | "suggestion">,
+): void {
+  ctx.output.issues.push({ severity: visitor.severity, rule: visitor.name, ...issue });
+}
+
 export function formatLocation(filename: string, node: Node): string {
   return `${filename}:${node.startPosition.row + 1}:${node.startPosition.column + 1}`;
 }

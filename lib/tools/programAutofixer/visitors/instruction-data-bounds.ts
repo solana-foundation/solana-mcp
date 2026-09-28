@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { findFirst, walk } from "../walk.js";
 import { getCallName } from "../walk.js";
 import {
@@ -156,9 +156,7 @@ export const instructionDataBounds: Visitor = {
       const info = isTryFromSliceImpl(node);
       if (!info) return;
       if (tryFromHasLenCheck(node)) return;
-      ctx.output.issues.push({
-        severity: "high",
-        rule: "instruction-data-bounds",
+      report(ctx, instructionDataBounds, {
         title: `TryFrom<&[u8]> for ${info.targetName} skips bounds validation`,
         location: formatLocation(ctx.filename, node),
         description: `\`impl TryFrom<&[u8]> for ${info.targetName}\` parses instruction data without a length check or slice-pattern destructuring. Direct indexing panics on short input (DoS).`,

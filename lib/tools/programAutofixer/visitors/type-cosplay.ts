@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor, VisitorContext } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 
 const ACCOUNT_STATE_CALL_PATTERN = /^(?:from_bytes|load|try_from_slice)/;
 
@@ -96,9 +96,7 @@ export const typeCosplay: Visitor = {
       const uniqueOwners = Array.from(new Set(relevant.map(g => g.ownerType)));
       if (uniqueOwners.length < 2) continue;
       for (const a of relevant) {
-        ctx.output.issues.push({
-          severity: "critical",
-          rule: "type-cosplay",
+        report(ctx, typeCosplay, {
           title: `Duplicate DISCRIMINATOR value ${a.value} across ${uniqueOwners.join(", ")}`,
           location: formatLocation(ctx.filename, a.node),
           description: `\`${a.ownerType}::DISCRIMINATOR = ${a.value}\` collides with the same value on ${uniqueOwners.filter(o => o !== a.ownerType).join(", ")}. Two account types with the same discriminator can be substituted for each other after deserialization.`,

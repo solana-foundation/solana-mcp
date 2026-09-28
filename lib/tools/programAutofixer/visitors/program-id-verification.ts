@@ -1,5 +1,5 @@
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import {
   KEY_MARKERS,
   bodyContainsRejectingCheckFor,
@@ -22,9 +22,7 @@ export const programIdVerification: Visitor = {
         if (!isProgramAccountName(account)) continue;
         if (fileContainsProgramVerifyFor(tree.rootNode, account)) continue;
         if (bodyContainsRejectingCheckFor(tree.rootNode, account, KEY_MARKERS)) continue;
-        ctx.output.issues.push({
-          severity: "low",
-          rule: "program-id-verification",
+        report(ctx, programIdVerification, {
           title: `Program account ${account} not verified by address`,
           location: formatLocation(ctx.filename, body),
           description: `\`${implName}::try_from\` accepts \`${account}\` without comparing its address to the canonical program ID.`,

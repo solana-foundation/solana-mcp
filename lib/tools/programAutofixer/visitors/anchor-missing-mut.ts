@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor, VisitorContext } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { ctxAccountsField, findFieldsForHandlerContext, isInsideProgramModule } from "./_anchor-helpers.js";
 import { getMethodCallName } from "./_helpers.js";
 
@@ -51,9 +51,7 @@ function emitIfFieldLacksMut(node: Node, fieldName: string, ctx: VisitorContext)
   const dedupeKey = `${fieldName}|${location}`;
   if (state.reported.has(dedupeKey)) return;
   state.reported.add(dedupeKey);
-  ctx.output.issues.push({
-    severity: "high",
-    rule: "anchor-missing-mut",
+  report(ctx, anchorMissingMut, {
     title: `Mutation of ctx.accounts.${fieldName} without \`mut\` constraint`,
     location,
     description: `\`ctx.accounts.${fieldName}\` is mutated inside a handler, but the matching field in the Accounts struct does not declare \`mut\` in its \`#[account(...)]\` attribute. Anchor will refuse the write at runtime — at best a hard error, at worst an inconsistency between declared writability and actual usage.`,

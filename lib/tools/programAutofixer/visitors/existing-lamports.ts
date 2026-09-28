@@ -1,9 +1,9 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { walk } from "../walk.js";
 import { getCallName } from "../walk.js";
-import { getMacroName, getMethodCallName, rootIdentifierOf } from "./_helpers.js";
+import { getMacroName, lamportsReceiverRoot } from "./_helpers.js";
 
 /**
  * Idempotent account creation: if a function checks `lamports() > 0`, it must also
@@ -55,15 +55,6 @@ function functionCreatesAccount(body: Node): boolean {
 
 function isIntegerLiteral(node: Node, value: string): boolean {
   return node.type === "integer_literal" && node.text.replaceAll("_", "") === value;
-}
-
-function lamportsReceiverRoot(node: Node): string | null {
-  if (node.type !== "call_expression") return null;
-  if (getMethodCallName(node) !== "lamports") return null;
-  const fn = node.childForFieldName("function");
-  if (!fn || fn.type !== "field_expression") return null;
-  const value = fn.childForFieldName("value");
-  return value ? rootIdentifierOf(value) : null;
 }
 
 function comparisonChecksExistingLamports(node: Node): boolean {
@@ -177,9 +168,7 @@ export const existingLamports: Visitor = {
         }
       });
       if (hasFallback) return;
-      ctx.output.issues.push({
-        severity: "medium",
-        rule: "existing-lamports",
+      report(ctx, existingLamports, {
         title: `Idempotent branch lacks Allocate/Assign/Transfer handling`,
         location: formatLocation(ctx.filename, ifNode),
         description: `An \`if account.lamports() > 0 { ... }\` branch exists but doesn't run \`Allocate\` / \`Assign\` / \`Transfer\` (or call \`create_pda_account_idempotent\`). The function may fail when the PDA was pre-funded with rent — and may silently skip account creation entirely.`,

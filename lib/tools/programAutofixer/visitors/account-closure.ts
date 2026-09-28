@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { getCallName, walk } from "../walk.js";
 import {
   findEnclosingFunctionBody,
@@ -61,9 +61,7 @@ export const accountClosure: Visitor = {
       if (!scope) return;
       if (scopeCallsOn(scope, info.receiver, CLOSE_FNS)) return;
       if (scopeCallsOn(scope, info.receiver, WIPE_FNS)) return;
-      ctx.output.issues.push({
-        severity: "critical",
-        rule: "account-closure",
+      report(ctx, accountClosure, {
         title: `Account ${info.receiver} drained without \`close()\``,
         location: formatLocation(ctx.filename, node),
         description: `\`${info.receiver}.set_lamports(0)\` is called but \`${info.receiver}.close()\` (or a manual \`realloc(0)\` + \`assign\` wipe) never happens in the same function. \`close()\` zeros the data buffer and reassigns the account to the system program; without it the closed account remains usable in the same transaction (reload attack).`,

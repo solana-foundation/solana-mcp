@@ -80,10 +80,6 @@ async function fetchOauthToken(mode: Extract<AuthMode, { kind: "oauth" }>): Prom
   return json.access_token;
 }
 
-async function resolveBearerToken(mode: AuthMode): Promise<string> {
-  return mode.kind === "pat" ? mode.token : fetchOauthToken(mode);
-}
-
 async function readJsonOrSse<T>(res: Response): Promise<T> {
   const text = await res.text();
   if ((res.headers.get("content-type") ?? "").includes("text/event-stream")) {
@@ -105,7 +101,7 @@ export async function dbxFetch<T>(path: string, init: RequestInit = {}): Promise
     );
   }
 
-  const bearer = await resolveBearerToken(mode);
+  const bearer = mode.kind === "pat" ? mode.token : await fetchOauthToken(mode);
   const url = `${mode.host}${path.startsWith("/") ? path : `/${path}`}`;
   const headers = new Headers(init.headers);
   headers.set("Authorization", `Bearer ${bearer}`);

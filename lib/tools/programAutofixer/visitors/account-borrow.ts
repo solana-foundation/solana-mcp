@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { walk } from "../walk.js";
 import { getMethodCallName } from "./_helpers.js";
 
@@ -84,9 +84,7 @@ export const accountBorrow: Visitor = {
           for (let i = 0; i < j; i++) {
             if (!bindingStillLiveAt(group[i], group[j], body)) continue;
             if (hasDropBetween(body, group[i].call, group[j].call)) continue;
-            ctx.output.issues.push({
-              severity: "low",
-              rule: "account-borrow",
+            report(ctx, accountBorrow, {
               title: `Repeated mutable borrow of ${receiver} without drop`,
               location: formatLocation(ctx.filename, group[j].call),
               description: `\`${receiver}\` is mutably borrowed again while an earlier \`let\`-bound borrow is still live in the same scope, with no \`drop(...)\` between borrows. The runtime will panic on the second borrow.`,

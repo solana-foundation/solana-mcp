@@ -6,7 +6,7 @@ export { SECTION_IDS, SECTION_DESCRIPTIONS } from "./sources.types.js";
 
 const ALLOWED = new Set<string>(SECTION_IDS);
 
-function freezeSources(raw: readonly RawSource[]): readonly RawSource[] {
+function assertKnownSections(raw: readonly RawSource[]): readonly RawSource[] {
   for (const s of raw) {
     for (const tag of s.sections) {
       if (!ALLOWED.has(tag)) {
@@ -19,7 +19,7 @@ function freezeSources(raw: readonly RawSource[]): readonly RawSource[] {
   return raw;
 }
 
-export const ALL_SOURCES: readonly RawSource[] = freezeSources(RAW_SOURCES);
+export const ALL_SOURCES: readonly RawSource[] = assertKnownSections(RAW_SOURCES);
 export const ENABLED_SOURCES: readonly RawSource[] = ALL_SOURCES.filter(s => s.enabled);
 
 export function getSourceById(id: string): RawSource | undefined {
@@ -28,12 +28,4 @@ export function getSourceById(id: string): RawSource | undefined {
 
 export function sourcesForSection(section: SectionId): readonly RawSource[] {
   return ENABLED_SOURCES.filter(s => s.sections.includes(section));
-}
-
-export function distinctEnabledSections(): readonly SectionId[] {
-  const present = new Set<SectionId>();
-  for (const s of ENABLED_SOURCES) {
-    for (const tag of s.sections) present.add(tag);
-  }
-  return SECTION_IDS.filter(id => present.has(id));
 }

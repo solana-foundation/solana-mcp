@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import * as generalSolanaToolsModule from "../lib/tools/generalSolanaTools";
+import { createSolanaTools } from "../lib/tools/generalSolanaTools";
 import { createProgramAutofixerTool } from "../lib/tools/programAutofixer/index.js";
-import type { SolanaTool } from "../lib/tools/types";
 
 const { createMcpHandlerMock } = vi.hoisted(() => ({
   createMcpHandlerMock: vi.fn(),
@@ -15,25 +14,7 @@ import { createMcp } from "../lib";
 
 type InitializeServer = (server: { registerTool: (...args: unknown[]) => unknown }) => Promise<void> | void;
 
-function resolveGeneralSolanaTools(): SolanaTool[] {
-  const moduleExports = generalSolanaToolsModule as Record<string, unknown>;
-
-  if (Array.isArray(moduleExports.generalSolanaTools)) {
-    return moduleExports.generalSolanaTools as SolanaTool[];
-  }
-
-  const createSolanaTools = moduleExports.createSolanaTools;
-  if (typeof createSolanaTools === "function") {
-    const createdTools = (createSolanaTools as (model: unknown | null) => unknown)(null);
-    if (Array.isArray(createdTools)) {
-      return createdTools as SolanaTool[];
-    }
-  }
-
-  return [];
-}
-
-const allTools: SolanaTool[] = [...resolveGeneralSolanaTools(), createProgramAutofixerTool()];
+const allTools = [...createSolanaTools(), createProgramAutofixerTool()];
 
 describe("createMcp", () => {
   beforeEach(() => {

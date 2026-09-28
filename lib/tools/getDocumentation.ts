@@ -43,8 +43,6 @@ async function tryFetchLlmsTxt(source: RawSource): Promise<FetchResult> {
 }
 
 function chunksToMarkdown(chunks: SourceChunk[]): string {
-  if (chunks.length === 0) return "";
-
   const parts: string[] = [];
   let lastUrl: string | null = null;
 
@@ -98,7 +96,7 @@ async function fetchOne(source: RawSource): Promise<SectionResult> {
     return { source, body: pointerBody(source, llms.reason) };
   }
 
-  const stitched = chunksToMarkdown([...chunks]);
+  const stitched = chunksToMarkdown(chunks);
   const { text, truncated } = applyCharCap(stitched, PER_SOURCE_CHAR_CAP);
   const note = truncated
     ? `\n\n_[truncated at ${PER_SOURCE_CHAR_CAP} chars; use Solana_Documentation_Search for specific topics]_`
@@ -139,10 +137,10 @@ function notFoundResult(requested: string): SectionResult {
   };
 }
 
-function expandSectionTaxonomyId(id: string): RawSource[] | null {
+function expandSectionTaxonomyId(id: string): readonly RawSource[] | null {
   if (!SECTION_ID_SET.has(id)) return null;
   const sources = sourcesForSection(id as SectionId);
-  return sources.length > 0 ? [...sources] : null;
+  return sources.length > 0 ? sources : null;
 }
 
 export function normalizeSections(input: string | string[]): string[] {

@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { walk } from "../walk.js";
 import { getCallName } from "../walk.js";
 import {
@@ -103,9 +103,7 @@ export const dataSizeValidation: Visitor = {
       const scope = findEnclosingFunctionBody(node);
       if (!scope) return;
       if (scopeHasLengthCheck(scope, node, castTargetRoot(node))) return;
-      ctx.output.issues.push({
-        severity: "high",
-        rule: "data-size-validation",
+      report(ctx, dataSizeValidation, {
         title: `\`${name}\` without preceding length check`,
         location: formatLocation(ctx.filename, node),
         description: `\`${name}\` deserialises raw bytes without validating that the buffer is at least \`Self::LEN\` bytes. A short slice causes a buffer over-read inside the unsafe cast.`,

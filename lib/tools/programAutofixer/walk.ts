@@ -39,13 +39,6 @@ export function findFirst(root: Node, predicate: (n: Node) => boolean): Node | n
   return result;
 }
 
-export function isCallTo(node: Node, fnName: string): boolean {
-  if (node.type !== "call_expression") return false;
-  const fn = node.childForFieldName("function");
-  if (!fn) return false;
-  return getCallName(fn) === fnName;
-}
-
 export function getCallName(fnNode: Node): string | null {
   if (fnNode.type === "identifier") return fnNode.text;
   if (fnNode.type === "scoped_identifier" || fnNode.type === "field_expression") {
@@ -53,20 +46,4 @@ export function getCallName(fnNode: Node): string | null {
     return name?.text ?? null;
   }
   return fnNode.lastChild?.text ?? null;
-}
-
-export function callsAnyOf(root: Node, names: ReadonlySet<string>): boolean {
-  let found = false;
-  walk(root, n => {
-    if (found) return "skip";
-    if (n.type === "call_expression") {
-      const fn = n.childForFieldName("function");
-      const name = fn ? getCallName(fn) : null;
-      if (name && names.has(name)) {
-        found = true;
-        return "skip";
-      }
-    }
-  });
-  return found;
 }

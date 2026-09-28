@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor, VisitorContext } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { findFirst, getCallName, walk } from "../walk.js";
 import {
   FROM_BYTES_NAMES,
@@ -151,9 +151,7 @@ export const missingOwner: Visitor = {
       const info = isFromBytesCall(node);
       if (!info || !info.receiver) return;
       if (fromBytesTargetValidated(node, ctx, VERIFY_OWNER_CALLS, OWNER_MARKERS)) return;
-      ctx.output.issues.push({
-        severity: "high",
-        rule: "missing-owner",
+      report(ctx, missingOwner, {
         title: `Deserialization of ${info.receiver} without ownership check`,
         location: formatLocation(ctx.filename, node),
         description: `\`from_bytes\` is called on \`${info.receiver}\` without a preceding \`verify_owned_by(${info.receiver}, &crate::ID)\` (or \`verify_current_program_account\`). Type-cosplay attack: a malicious account owned by another program can be deserialized as our state.`,

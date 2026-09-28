@@ -538,3 +538,36 @@ export function getMethodReceiverRoot(callNode: Node): string | null {
   const value = fn.childForFieldName("value");
   return value ? rootIdentifierOf(value) : null;
 }
+
+export function isCreateAccountStruct(node: Node): boolean {
+  if (node.type !== "struct_expression") return false;
+  const typeId = node.namedChild(0);
+  if (!typeId) return false;
+  if (typeId.type === "type_identifier") return typeId.text === "CreateAccount";
+  if (typeId.type === "scoped_type_identifier" || typeId.type === "scoped_identifier") {
+    const last = typeId.namedChild(typeId.namedChildCount - 1);
+    return last?.text === "CreateAccount";
+  }
+  return false;
+}
+
+export function getFieldInitValue(struct: Node, fieldName: string): Node | null {
+  const list = struct.namedChild(1);
+  if (!list || list.type !== "field_initializer_list") return null;
+  for (let i = 0; i < list.namedChildCount; i++) {
+    const init = list.namedChild(i);
+    if (!init || init.type !== "field_initializer") continue;
+    const name = init.namedChild(0);
+    if (name?.text === fieldName) return init.namedChild(init.namedChildCount - 1);
+  }
+  return null;
+}
+
+export function lamportsReceiverRoot(node: Node): string | null {
+  if (node.type !== "call_expression") return null;
+  if (getMethodCallName(node) !== "lamports") return null;
+  const fn = node.childForFieldName("function");
+  if (!fn || fn.type !== "field_expression") return null;
+  const value = fn.childForFieldName("value");
+  return value ? rootIdentifierOf(value) : null;
+}

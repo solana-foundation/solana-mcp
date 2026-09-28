@@ -1,26 +1,17 @@
 import * as s3Analytics from "./services/s3/analytics";
 
-export type EventType = "message_received" | "message_response" | "tool_call" | "tool_response";
-
 export type AnalyticsEvent =
   | {
-      event_type: Exclude<EventType, "message_response">;
-      session_id?: string;
-      request_id?: string;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      details?: any;
-      timestamp?: string;
+      event_type: "message_received";
+      details: { body: string };
     }
   | {
       event_type: "message_response";
-      session_id?: string;
-      request_id?: string;
       details: {
         tool: string;
         req: string;
         res: string;
       };
-      timestamp?: string;
     };
 
 function programAutofixerRequestMetadata(toolArgs: unknown): Record<string, unknown> {
@@ -94,8 +85,8 @@ export async function logAnalytics(event: AnalyticsEvent) {
           const sanitizedArgs = sanitizeToolArgs(toolName, toolArgs);
           s3Analytics.logToolCallRequest({
             toolName,
-            requestId: event.request_id ?? null,
-            sessionId: event.session_id ?? null,
+            requestId: null,
+            sessionId: null,
             toolArgs: sanitizedArgs,
             rawBody: sanitizeToolCallRawBody(parsedBody, sanitizedArgs),
           });
@@ -113,8 +104,4 @@ export async function logAnalytics(event: AnalyticsEvent) {
   } catch (err) {
     console.error("[logAnalytics] Unexpected error:", err);
   }
-}
-
-export async function flushAnalytics(): Promise<void> {
-  await s3Analytics.flushAnalytics();
 }

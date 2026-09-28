@@ -1,6 +1,6 @@
 import type { Node } from "web-tree-sitter";
 import type { Visitor } from "../types.js";
-import { formatLocation } from "../types.js";
+import { formatLocation, report } from "../types.js";
 import { getCallName, walk } from "../walk.js";
 import { findEnclosingFunctionBody, getCallArgs, getMethodCallName, getMethodReceiverRoot } from "./_helpers.js";
 
@@ -167,9 +167,7 @@ export const unsafeUnwrap: Visitor = {
       if (isInTestCode(node)) return;
       const root = getMethodReceiverRoot(node);
       if (root && guardedByPrecedingCheck(node, root)) return;
-      ctx.output.issues.push({
-        severity: "low",
-        rule: "unsafe-unwrap",
+      report(ctx, unsafeUnwrap, {
         title: `Use of \`.unwrap()\` may panic`,
         location: formatLocation(ctx.filename, node),
         description: `\`.unwrap()\` panics the program on failure. Solana program panics abort the transaction and emit no useful diagnostics. Prefer \`.ok_or(ProgramError::...)?\` or \`.map_err(|_| ...)?\`.`,
