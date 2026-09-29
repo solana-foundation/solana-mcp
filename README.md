@@ -12,6 +12,20 @@ The official Solana Developer MCP. Purpose: serve up-to-date documentation acros
 - **Section catalogue** ([`ingestion/sources.yaml`](ingestion/sources.yaml) → [`lib/sources.generated.ts`](lib/sources.generated.ts)): `pnpm gen:sources` emits a typed catalogue of every source, its tags from a closed 21-section taxonomy, and `use_cases` keywords used by `list_sections` to route the agent.
 - **Analytics** ([`lib/services/s3/analytics.ts`](lib/services/s3/analytics.ts)): Tool calls + initializations are buffered in memory and uploaded as JSONL objects to the S3 prefix configured by `ANALYTICS_S3_URI`.
 
+## CLI
+
+[`cli/`](cli/) ships `@solana/mcp`, a dependency-free command-line client for agents and scripts without MCP support. Each command is one `tools/call` against `mcp.solana.com`, so it needs no credentials.
+
+```bash
+npx @solana/mcp search "derive a PDA with Anchor"
+npx @solana/mcp ask "why does my CPI fail with PrivilegeEscalation?"
+npx @solana/mcp sections
+npx @solana/mcp docs anchor-docs frameworks
+npx @solana/mcp check programs/vault/src/lib.rs   # or: cat lib.rs | npx @solana/mcp check -
+```
+
+Add `--json` for the raw tool result. Exit codes: `0` ok, `1` `check` found a syntax error or an undismissed critical/high issue, `2` usage, network, or server error. Set `SOLANA_MCP_URL` to point at another server, e.g. `http://localhost:8080/mcp`.
+
 ## Local Development
 
 ```bash

@@ -1,0 +1,21 @@
+{
+  "name": "@solana/mcp",
+  "version": "0.1.0",
+  "description": "Command-line client for the Solana MCP server: doc search, docs, and the program autofixer",
+  "type": "module",
+  "bin": {
+    "solana-mcp": "solana-mcp.mjs"
+  },
+  "files": [
+    "solana-mcp.mjs"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/solana-foundation/solana-mcp.git",
+    "directory": "cli"
+  },
+  "license": "ISC"
+}
