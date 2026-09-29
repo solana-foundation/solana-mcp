@@ -24,7 +24,7 @@ npx @solana/mcp docs anchor-docs frameworks
 npx @solana/mcp check programs/vault/src/lib.rs   # or: cat lib.rs | npx @solana/mcp check -
 ```
 
-Add `--json` for the raw tool result. Exit codes: `0` ok, `1` `check` found a syntax error or an undismissed critical/high issue, `2` usage, network, or server error. Set `SOLANA_MCP_URL` to point at another server, e.g. `http://localhost:8080/mcp`.
+Add `--json` for the raw tool result, and `--framework anchor|pinocchio` to `check` when the framework is not detected from imports. Exit codes: `0` ok, `1` `check` found a syntax error or an undismissed critical/high issue, `2` usage, network, or server error. Set `SOLANA_MCP_URL` to point at another server, e.g. `http://localhost:8080/mcp`.
 
 ## Local Development
 

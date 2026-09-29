@@ -39,7 +39,17 @@ function run(args: string[]): Promise<{ code: number; stdout: string; stderr: st
 
 function autofixerReply(blocking: boolean): RpcReply {
   const report = {
-    issues: [{ severity: blocking ? "high" : "low", rule: "r", title: "t", location: "a.rs:1:1", fingerprint: "f" }],
+    issues: [
+      {
+        severity: blocking ? "high" : "low",
+        rule: "r",
+        title: "t",
+        location: "a.rs:1:1",
+        description: "why",
+        suggestion: "how",
+        fingerprint: "f",
+      },
+    ],
     suggestions: [],
     framework_detected: "anchor",
     false_positive_hints: {},
@@ -58,10 +68,11 @@ describe("solana-mcp cli", () => {
 
   it("exits 1 when check reports blocking issues", async () => {
     reply = autofixerReply(true);
-    const out = await run(["check", CLI]);
+    const out = await run(["check", CLI, "--framework", "anchor"]);
     expect(received?.name).toBe("program_autofixer");
+    expect(received?.arguments).toMatchObject({ filename: CLI, framework: "anchor" });
     expect(out.code).toBe(1);
-    expect(out.stdout).toContain("high\tr\ta.rs:1:1\tt");
+    expect(out.stdout).toContain("high\tr\ta.rs:1:1\tt\n  why\n  fix: how");
   });
 
   it("exits 0 when check reports only advisory issues", async () => {

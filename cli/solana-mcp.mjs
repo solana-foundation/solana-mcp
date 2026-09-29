@@ -1,18 +1,19 @@
 #!/usr/bin/env node
 import { readFile } from "node:fs/promises";
-import { basename } from "node:path";
+import { parseArgs } from "node:util";
 
 const ENDPOINT = process.env.SOLANA_MCP_URL ?? "https://mcp.solana.com/mcp";
 const TIMEOUT_MS = 60_000;
 
-const USAGE = `Usage: solana-mcp <command> [args] [--json]
+const USAGE = `Usage: solana-mcp <command> [args] [--json] [--framework anchor|pinocchio]
 
 Commands:
   search <query>        Semantic search over Solana docs
   ask <question>        Ask a how-to or debugging question
   sections              List every doc source and section id
   docs <id...>          Fetch full docs by source id or section id
-  check <file.rs|->     Lint Solana program Rust (Anchor, Pinocchio); "-" reads stdin
+  check <file.rs|->     Lint Solana program Rust (Anchor, Pinocchio); "-" reads stdin.
+                        Pass --framework when it is not detected from imports
 
 Exit codes: 0 ok, 1 check found blocking issues, 2 error`;
 
@@ -24,7 +25,7 @@ async function readStdin() {
   return Buffer.concat(chunks).toString("utf8");
 }
 
-async function toolCall(command, args) {
+async function toolCall(command, args, framework) {
   const text = args.join(" ").trim();
   switch (command) {
     case "search":
@@ -42,7 +43,10 @@ async function toolCall(command, args) {
       if (args.length !== 1) throw new UsageError("check needs exactly one file, or - for stdin");
       const [file] = args;
       const code = file === "-" ? await readStdin() : await readFile(file, "utf8");
-      return ["program_autofixer", file === "-" ? { code } : { code, filename: basename(file) }];
+      return [
+        "program_autofixer",
+        { code, ...(file === "-" ? {} : { filename: file }), ...(framework ? { framework } : {}) },
+      ];
     }
     default:
       throw new UsageError(`unknown command: ${command}`);
@@ -78,23 +82,36 @@ async function callTool(name, args) {
 
 function formatCheck(report) {
   const lines = [
-    ...report.issues.map(
-      i => `${i.severity}\t${i.rule}\t${i.location}\t${i.title}${i.dismissed ? " (dismissed)" : ""}`,
-    ),
+    ...report.issues.flatMap(i => [
+      `${i.severity}\t${i.rule}\t${i.location}\t${i.title}${i.dismissed ? " (dismissed)" : ""}`,
+      ...(i.description ? [`  ${i.description}`] : []),
+      ...(i.suggestion ? [`  fix: ${i.suggestion}`] : []),
+    ]),
     ...report.suggestions.map(s => `suggestion\t${s}`),
   ];
   return lines.length === 0 ? "No issues found." : lines.join("\n");
 }
 
 async function main(argv) {
-  const json = argv.includes("--json");
-  const [command, ...args] = argv.filter(a => a !== "--json");
-  if (!command || command === "help" || command === "--help" || command === "-h") {
-    console.log(USAGE);
-    return command ? 0 : 2;
+  let parsed;
+  try {
+    parsed = parseArgs({
+      args: argv,
+      allowPositionals: true,
+      options: { json: { type: "boolean" }, framework: { type: "string" }, help: { type: "boolean", short: "h" } },
+    });
+  } catch (err) {
+    throw new UsageError(err.message);
   }
+  const { json, framework, help } = parsed.values;
+  const [command, ...args] = parsed.positionals;
+  if (help || command === "help") {
+    console.log(USAGE);
+    return 0;
+  }
+  if (!command) throw new UsageError("missing command");
 
-  const [name, toolArgs] = await toolCall(command, args);
+  const [name, toolArgs] = await toolCall(command, args, framework);
   const result = await callTool(name, toolArgs);
 
   if (command === "check") {
