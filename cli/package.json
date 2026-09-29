@@ -4,11 +4,15 @@
   "description": "Command-line client for the Solana MCP server: doc search, docs, and the program autofixer",
   "type": "module",
   "bin": {
-    "solana-mcp": "solana-mcp.mjs"
+    "solana-mcp": "dist/solana-mcp.mjs"
   },
   "files": [
-    "solana-mcp.mjs"
+    "dist"
   ],
+  "scripts": {
+    "build": "mkdir -p dist && cp src/solana-mcp.mjs dist/",
+    "prepack": "npm run build"
+  },
   "engines": {
     "node": ">=20"
   },

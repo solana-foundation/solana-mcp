@@ -4,7 +4,7 @@ import type { AddressInfo } from "node:net";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-const CLI = join(__dirname, "../../cli/solana-mcp.mjs");
+const CLI = join(__dirname, "../../cli/src/solana-mcp.mjs");
 
 type RpcReply = Record<string, unknown>;
 

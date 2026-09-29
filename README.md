@@ -26,6 +26,8 @@ npx @solana/mcp check programs/vault/src/lib.rs   # or: cat lib.rs | npx @solana
 
 Add `--json` for the raw tool result, and `--framework anchor|pinocchio` to `check` when the framework is not detected from imports. Exit codes: `0` ok, `1` `check` found a syntax error or an undismissed critical/high issue, `2` usage, network, or server error. Set `SOLANA_MCP_URL` to point at another server, e.g. `http://localhost:8080/mcp`.
 
+To release, bump `version` in [`cli/package.json`](cli/package.json), merge, then run the [`Publish CLI`](.github/workflows/publish-cli.yml) workflow from `main` (dry run first). It publishes to npm through Trusted Publishing and creates a `cli-v<version>` GitHub release.
+
 ## Local Development
 
 ```bash
