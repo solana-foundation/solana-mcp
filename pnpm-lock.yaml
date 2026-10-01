@@ -31,7 +31,7 @@ importers:
         version: 17.4.2
       mcp-handler:
         specifier: ^2.1.0
-        version: 2.1.1(@modelcontextprotocol/server@2.0.0)
+        version: 2.1.2(@modelcontextprotocol/server@2.0.0)
       tree-sitter-rust:
         specifier: ^0.24.0
         version: 0.24.0
@@ -50,7 +50,7 @@ importers:
         version: 2.0.0
       '@solana/prettier-config-solana':
         specifier: ^0.0.7
-        version: 0.0.7(prettier@3.9.6)
+        version: 0.0.7(prettier@3.9.9)
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
@@ -68,16 +68,16 @@ importers:
         version: 10.1.8(eslint@10.6.0)
       eslint-plugin-prettier:
         specifier: ^5.5.5
-        version: 5.5.6(eslint-config-prettier@10.1.8(eslint@10.6.0))(eslint@10.6.0)(prettier@3.9.6)
+        version: 5.5.6(eslint-config-prettier@10.1.8(eslint@10.6.0))(eslint@10.6.0)(prettier@3.9.9)
       js-yaml:
         specifier: ^5.2.0
         version: 5.2.3
       prettier:
         specifier: ^3.8.1
-        version: 3.9.6
+        version: 3.9.9
       tsx:
         specifier: ^4.21.0
-        version: 4.23.13
+        version: 4.23.15
       typescript:
         specifier: ^6.0.3
         version: 6.0.3
@@ -86,10 +86,10 @@ importers:
         version: 8.63.0(eslint@10.6.0)(typescript@6.0.3)
       vite:
         specifier: ^8.0.14
-        version: 8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.13)(yaml@2.8.3)
+        version: 8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.8.3)
       vitest:
         specifier: ^4.1.3
-        version: 4.1.11(@edge-runtime/vm@3.2.0)(@opentelemetry/api@1.9.0)(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(vite@8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.13)(yaml@2.8.3))
+        version: 4.1.11(@edge-runtime/vm@3.2.0)(@opentelemetry/api@1.9.0)(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(vite@8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.8.3))
 
 packages:
 
@@ -1073,8 +1073,8 @@ packages:
     resolution: {integrity: sha512-hXdUTZYIVOt1Ex//jAQi+wTZZpUpwBj/0QsOzqegb3rGMMeJiSEu5xLHnYfBrRV4RH2+OCSOO95Is/7x1WJ4bw==}
     engines: {node: '>=10'}
 
-  mcp-handler@2.1.1:
-    resolution: {integrity: sha512-D/PAwxF9TexmixJY+FZMgYq9SSbGm3vtcUjwUHZ8tYYuOtGT3/KgAKBjO3UJZoXgW8nHDtv8ySOICMEZPD0b/Q==}
+  mcp-handler@2.1.2:
+    resolution: {integrity: sha512-pUQXkEHW6GWsCnhyNEVUhA9beT5JoIDd+ITusxtgV9aAAC+EW4cGFyeXQtaTmDTIaUqPkMVbwLznYYEP8Pcrkg==}
     engines: {node: '>=20'}
     hasBin: true
     peerDependencies:
@@ -1161,8 +1161,8 @@ packages:
     resolution: {integrity: sha512-SxToR7P8Y2lWmv/kTzVLC1t/GDI2WGjMwNhLLE9qtH8Q13C+aEmuRlzDst4Up4s0Wc8sF2M+J57iB3cMLqftfg==}
     engines: {node: '>=6.0.0'}
 
-  prettier@3.9.6:
-    resolution: {integrity: sha512-OpN0zzVdiaiAhxpuuj5efpIS4sY9j7bY6uR5mnj5yPzGkdkjNKSJeUThPb60Jw29QuAZgA4o+/iB49kFiaBX6g==}
+  prettier@3.9.9:
+    resolution: {integrity: sha512-Z/CJHIkdujO/OtN7nXUii0Rf3VT5SRuhjBA82Xvu2XhBUgX3nhP67T0LHceBdQLex7OOFGTox+Q5Yg8Jk2Qivg==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -1241,8 +1241,8 @@ packages:
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
-  tsx@4.23.13:
-    resolution: {integrity: sha512-BL5MGkRln6aDYhb0xbQlEAGw743BaZYWdbWtdJOBriYJboKgUUYCadFp2/FpBBZquBC/ezNBn7wMMPx7FDZUDw==}
+  tsx@4.23.15:
+    resolution: {integrity: sha512-Yiex1Ovn8z2xPpOWckIiysV1SSyRMY9BkLF++q0yKiDxCqRhosKfMg3janKkiLBwZ5c/YryloKwGZcrEmtwxKw==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -1841,9 +1841,9 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@solana/prettier-config-solana@0.0.7(prettier@3.9.6)':
+  '@solana/prettier-config-solana@0.0.7(prettier@3.9.9)':
     dependencies:
-      prettier: 3.9.6
+      prettier: 3.9.9
 
   '@standard-schema/spec@1.1.0': {}
 
@@ -1974,7 +1974,7 @@ snapshots:
       obug: 2.1.4
       std-env: 4.2.0
       tinyrainbow: 3.1.1
-      vitest: 4.1.11(@edge-runtime/vm@3.2.0)(@opentelemetry/api@1.9.0)(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(vite@8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.13)(yaml@2.8.3))
+      vitest: 4.1.11(@edge-runtime/vm@3.2.0)(@opentelemetry/api@1.9.0)(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(vite@8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.8.3))
 
   '@vitest/expect@4.1.11':
     dependencies:
@@ -1985,13 +1985,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.1
 
-  '@vitest/mocker@4.1.11(vite@8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.13)(yaml@2.8.3))':
+  '@vitest/mocker@4.1.11(vite@8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.8.3))':
     dependencies:
       '@vitest/spy': 4.1.11
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.13)(yaml@2.8.3)
+      vite: 8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.8.3)
 
   '@vitest/pretty-format@4.1.11':
     dependencies:
@@ -2109,10 +2109,10 @@ snapshots:
     dependencies:
       eslint: 10.6.0
 
-  eslint-plugin-prettier@5.5.6(eslint-config-prettier@10.1.8(eslint@10.6.0))(eslint@10.6.0)(prettier@3.9.6):
+  eslint-plugin-prettier@5.5.6(eslint-config-prettier@10.1.8(eslint@10.6.0))(eslint@10.6.0)(prettier@3.9.9):
     dependencies:
       eslint: 10.6.0
-      prettier: 3.9.6
+      prettier: 3.9.9
       prettier-linter-helpers: 1.0.1
       synckit: 0.11.13
     optionalDependencies:
@@ -2350,7 +2350,7 @@ snapshots:
     dependencies:
       semver: 7.8.5
 
-  mcp-handler@2.1.1(@modelcontextprotocol/server@2.0.0):
+  mcp-handler@2.1.2(@modelcontextprotocol/server@2.0.0):
     dependencies:
       '@modelcontextprotocol/server': 2.0.0
       chalk: 5.6.2
@@ -2415,7 +2415,7 @@ snapshots:
     dependencies:
       fast-diff: 1.3.0
 
-  prettier@3.9.6: {}
+  prettier@3.9.9: {}
 
   punycode@2.3.1: {}
 
@@ -2486,7 +2486,7 @@ snapshots:
 
   tslib@2.8.1: {}
 
-  tsx@4.23.13:
+  tsx@4.23.15:
     dependencies:
       esbuild: 0.28.2
     optionalDependencies:
@@ -2515,7 +2515,7 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  vite@8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.13)(yaml@2.8.3):
+  vite@8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.8.3):
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.5
@@ -2526,13 +2526,13 @@ snapshots:
       '@types/node': 26.1.2
       esbuild: 0.28.2
       fsevents: 2.3.3
-      tsx: 4.23.13
+      tsx: 4.23.15
       yaml: 2.8.3
 
-  vitest@4.1.11(@edge-runtime/vm@3.2.0)(@opentelemetry/api@1.9.0)(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(vite@8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.13)(yaml@2.8.3)):
+  vitest@4.1.11(@edge-runtime/vm@3.2.0)(@opentelemetry/api@1.9.0)(@types/node@26.1.2)(@vitest/coverage-v8@4.1.11)(vite@8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.8.3)):
     dependencies:
       '@vitest/expect': 4.1.11
-      '@vitest/mocker': 4.1.11(vite@8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.13)(yaml@2.8.3))
+      '@vitest/mocker': 4.1.11(vite@8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.8.3))
       '@vitest/pretty-format': 4.1.11
       '@vitest/runner': 4.1.11
       '@vitest/snapshot': 4.1.11
@@ -2549,7 +2549,7 @@ snapshots:
       tinyexec: 1.3.0
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.1
-      vite: 8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.13)(yaml@2.8.3)
+      vite: 8.1.5(@types/node@26.1.2)(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.8.3)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@edge-runtime/vm': 3.2.0
