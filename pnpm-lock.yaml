@@ -25,13 +25,13 @@ importers:
         version: 3.1081.0
       '@modelcontextprotocol/server':
         specifier: ^2.0.0
-        version: 2.0.0
+        version: 2.3.0
       dotenv:
         specifier: ^17.3.1
         version: 17.4.2
       mcp-handler:
         specifier: ^2.1.0
-        version: 2.1.2(@modelcontextprotocol/server@2.0.0)
+        version: 2.1.2(@modelcontextprotocol/server@2.3.0)
       tree-sitter-rust:
         specifier: ^0.24.0
         version: 0.24.0
@@ -436,8 +436,12 @@ packages:
     resolution: {integrity: sha512-pJCEwGG7Lfr/+PQp9ZTwKXNeO5wzbfKL7H3MYpCorM4oFBoQrdjnBgEoqG+RjhsvS1FKrDbKux+M1HhlnGWqcA==}
     engines: {node: '>=20'}
 
-  '@modelcontextprotocol/server@2.0.0':
-    resolution: {integrity: sha512-YhHWdHfpFMQfd0prsEnxKeS3Qz3ytIGmsS0sth4KDjnacIT7hxk6hXHkJ9KysxlkvTM+WZAtQbbcUhdoP4Hvtw==}
+  '@modelcontextprotocol/core@2.3.0':
+    resolution: {integrity: sha512-09BHFaNVBe5pB2AhzCfLj0cqmsKLERvZQ4FblzP90UMGLaXVqdZPByFjURwsUYCmxonUW2yAwgTTvle+8O2/8w==}
+    engines: {node: '>=20'}
+
+  '@modelcontextprotocol/server@2.3.0':
+    resolution: {integrity: sha512-+6b0LdsQLmHsvS7J6sQJ4weTpzUn61fU1JKS+321/+IyDYoHW5CR2Tgqcs6GgAAQvlesCo6yX3xttgmx+XGtJw==}
     engines: {node: '>=20'}
 
   '@napi-rs/wasm-runtime@1.2.2':
@@ -1738,9 +1742,13 @@ snapshots:
     dependencies:
       zod: 4.4.3
 
-  '@modelcontextprotocol/server@2.0.0':
+  '@modelcontextprotocol/core@2.3.0':
     dependencies:
-      '@modelcontextprotocol/core': 2.0.0
+      zod: 4.4.3
+
+  '@modelcontextprotocol/server@2.3.0':
+    dependencies:
+      '@modelcontextprotocol/core': 2.3.0
       zod: 4.4.3
 
   '@napi-rs/wasm-runtime@1.2.2(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
@@ -2350,9 +2358,9 @@ snapshots:
     dependencies:
       semver: 7.8.5
 
-  mcp-handler@2.1.2(@modelcontextprotocol/server@2.0.0):
+  mcp-handler@2.1.2(@modelcontextprotocol/server@2.3.0):
     dependencies:
-      '@modelcontextprotocol/server': 2.0.0
+      '@modelcontextprotocol/server': 2.3.0
       chalk: 5.6.2
       commander: 11.1.0
 
