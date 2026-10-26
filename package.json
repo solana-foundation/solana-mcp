@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1054.0",
-    "@modelcontextprotocol/server": "^2.0.0",
+    "@modelcontextprotocol/server": "^2.4.0",
     "dotenv": "^17.3.1",
     "mcp-handler": "^2.1.0",
     "tree-sitter-rust": "^0.24.0",
@@ -67,7 +67,7 @@
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.57.2",
-    "vite": "^8.0.14",
+    "vite": "^8.3.5",
     "vitest": "^4.1.12"
   }
 }
