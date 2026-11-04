@@ -27,7 +27,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.30.0",
   "engines": {
-    "node": "24.x"
+    "node": "26.x"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1054.0",

@@ -1,16 +1,16 @@
 # syntax=docker/dockerfile:1.7
 
-FROM node:24-alpine AS deps
+FROM node:26-alpine AS deps
 WORKDIR /app
-RUN corepack enable && corepack prepare pnpm@10.30.0 --activate
-COPY package.json pnpm-lock.yaml ./
+RUN npm install -g pnpm@10.30.0
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 
-FROM node:24-alpine AS build
+FROM node:26-alpine AS build
 WORKDIR /app
-RUN corepack enable && corepack prepare pnpm@10.30.0 --activate
+RUN npm install -g pnpm@10.30.0
 COPY --from=deps /app/node_modules ./node_modules
-COPY package.json pnpm-lock.yaml tsconfig.json ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json ./
 COPY scripts ./scripts
 COPY ingestion/sources.yaml ./ingestion/sources.yaml
 COPY lib ./lib
@@ -19,7 +19,7 @@ RUN pnpm gen:sources \
     && pnpm exec tsc -p tsconfig.json \
     && pnpm prune --prod
 
-FROM node:24-alpine AS runtime
+FROM node:26-alpine AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=8080
