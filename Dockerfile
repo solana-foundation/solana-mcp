@@ -2,15 +2,15 @@
 
 FROM node:26-alpine AS deps
 WORKDIR /app
-RUN corepack enable && corepack prepare pnpm@10.30.0 --activate
-COPY package.json pnpm-lock.yaml ./
+RUN npm install -g pnpm@10.30.0
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 
 FROM node:26-alpine AS build
 WORKDIR /app
-RUN corepack enable && corepack prepare pnpm@10.30.0 --activate
+RUN npm install -g pnpm@10.30.0
 COPY --from=deps /app/node_modules ./node_modules
-COPY package.json pnpm-lock.yaml tsconfig.json ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json ./
 COPY scripts ./scripts
 COPY ingestion/sources.yaml ./ingestion/sources.yaml
 COPY lib ./lib
