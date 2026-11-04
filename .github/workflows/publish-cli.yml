@@ -46,7 +46,7 @@ jobs:
         with:
           package: '@solana/mcp'
           package-directory: cli
-          node-version: '24'
+          node-version: '26.13.0'
           pnpm-version: ${{ env.PNPM_VERSION }}
           check-version-available: ${{ !inputs.dry-run }}
           dry-run: ${{ inputs.dry-run }}
