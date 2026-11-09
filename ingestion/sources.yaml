@@ -34,6 +34,7 @@
 #   testing         — local validators, simulation harnesses
 #   tooling         — CLI, IDL gen, codama, helpers, dev utilities
 #   zk              — ZK compression, light protocol, ZK programs
+#   privacy         — shielded pools, private and confidential transfers, encrypted balances
 #   bridges         — cross-chain bridges, token portals
 #   identity        — attestation, proof-of-identity, on-chain records
 #   examples        — tutorial repos, reference programs
@@ -157,6 +158,16 @@ sources:
     primary_url: https://www.zkcompression.com
     sitemaps:
       - https://www.zkcompression.com/sitemap.xml
+
+  - id: solana-privacy-rings-docs
+    name: Solana Privacy Rings Docs (Helius)
+    kind: web
+    enabled: true
+    sections: [privacy, clients, wallets]
+    use_cases: "Privacy on Solana, private payments and transfers that hide the amount, anonymous transfers that hide sender and recipient, Solana Privacy Rings (SPR), shielded pool, private balances as encrypted UTXOs, deposit/transfer/withdraw, shielded keypair and viewing keys, Custom Rings with auditors and freeze/thaw, private wallet integration, @heliuslabs/spr SDK, SPR indexer API (encrypted UTXOs by view tag, shielded history, Merkle and non-inclusion proofs), mainnet program IDs and endpoints"
+    primary_url: https://www.helius.dev/docs/privacy
+    sitemaps: [https://www.helius.dev/docs/sitemap.xml]
+    url_include: [/docs/privacy, /docs/api-reference/privacy]
 
   # --- Rust / Python / Java SDK docs ---
   - id: solana-program-rust-docs
@@ -395,7 +406,7 @@ sources:
     name: SPL Token 2022
     kind: github
     enabled: true
-    sections: [tokens, programs]
+    sections: [tokens, programs, privacy]
     use_cases: "SPL Token-2022 (Token Extensions), transfer hooks, confidential transfers, interest-bearing, metadata pointer, modern token standard"
     primary_url: https://github.com/solana-program/token-2022
     github: { owner: solana-program, repo: token-2022, include_readmes: true, include_source_code: true }
@@ -1380,6 +1391,24 @@ sources:
     use_cases: "Light Protocol ZK compression source, compressed accounts, photon indexer, low-rent state"
     primary_url: https://github.com/Lightprotocol/light-protocol
     github: { owner: Lightprotocol, repo: light-protocol, include_readmes: true, include_source_code: true }
+
+  - id: gh-zolana
+    name: GitHub helius-labs/zolana (Solana Privacy Rings)
+    kind: github
+    enabled: true
+    sections: [privacy, zk, programs]
+    use_cases: "Solana Privacy Rings protocol (Zolana), shielded pool program, private program state with zero-knowledge proofs, ZK programs with Rust circuits that invoke the shielded pool, UtxoState, zolana build-zk-program, protocol spec, nullifier tree, ring policy"
+    primary_url: https://github.com/helius-labs/zolana
+    github: { owner: helius-labs, repo: zolana, include_readmes: true, include_source_code: false }
+
+  - id: gh-zolana-examples
+    name: GitHub helius-labs/zolana-examples (Solana Privacy Rings)
+    kind: github
+    enabled: true
+    sections: [privacy, examples]
+    use_cases: "Solana Privacy Rings example code, Rust and TypeScript clients for registering a private wallet, deposit, private transfer, withdraw, syncing private balances and reading private history, confidential swap and timelock escrow ZK programs on the shielded pool"
+    primary_url: https://github.com/helius-labs/zolana-examples
+    github: { owner: helius-labs, repo: zolana-examples, include_readmes: true, include_source_code: true }
 
   # --- Additional Liquid staking / Stake pools ---
   - id: gh-marinade-liquid-staking
