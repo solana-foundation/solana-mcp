@@ -164,7 +164,7 @@ sources:
     kind: web
     enabled: true
     sections: [privacy, clients, wallets]
-    use_cases: "Solana Privacy Rings (SPR), private and confidential transfers, shielded pool, private balances as encrypted UTXOs, deposit/transfer/withdraw, shielded keypair and viewing keys, Custom Rings with auditors and freeze/thaw, private wallet integration, @heliuslabs/spr SDK, SPR indexer API (encrypted UTXOs by view tag, shielded history, Merkle and non-inclusion proofs), mainnet program IDs and endpoints"
+    use_cases: "Privacy on Solana, private payments and transfers that hide the amount, anonymous transfers that hide sender and recipient, Solana Privacy Rings (SPR), shielded pool, private balances as encrypted UTXOs, deposit/transfer/withdraw, shielded keypair and viewing keys, Custom Rings with auditors and freeze/thaw, private wallet integration, @heliuslabs/spr SDK, SPR indexer API (encrypted UTXOs by view tag, shielded history, Merkle and non-inclusion proofs), mainnet program IDs and endpoints"
     primary_url: https://www.helius.dev/docs/privacy
     sitemaps: [https://www.helius.dev/docs/sitemap.xml]
     url_include: [/docs/privacy, /docs/api-reference/privacy]
@@ -406,7 +406,7 @@ sources:
     name: SPL Token 2022
     kind: github
     enabled: true
-    sections: [tokens, programs]
+    sections: [tokens, programs, privacy]
     use_cases: "SPL Token-2022 (Token Extensions), transfer hooks, confidential transfers, interest-bearing, metadata pointer, modern token standard"
     primary_url: https://github.com/solana-program/token-2022
     github: { owner: solana-program, repo: token-2022, include_readmes: true, include_source_code: true }
@@ -1397,7 +1397,7 @@ sources:
     kind: github
     enabled: true
     sections: [privacy, zk, programs]
-    use_cases: "Solana Privacy Rings protocol (Zolana), shielded pool program, ZK programs with Rust circuits that invoke the shielded pool, UtxoState private program state, zolana build-zk-program, protocol spec, nullifier tree, ring policy"
+    use_cases: "Solana Privacy Rings protocol (Zolana), shielded pool program, private program state with zero-knowledge proofs, ZK programs with Rust circuits that invoke the shielded pool, UtxoState, zolana build-zk-program, protocol spec, nullifier tree, ring policy"
     primary_url: https://github.com/helius-labs/zolana
     github: { owner: helius-labs, repo: zolana, include_readmes: true, include_source_code: false }
 

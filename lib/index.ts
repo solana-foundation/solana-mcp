@@ -20,6 +20,7 @@ Routing:
 - Narrow question or error message → Solana_Documentation_Search or Solana_Expert__Ask_For_Help.
 - Compare or survey an ecosystem area (all DeFi, all wallets) → get_documentation with a section taxonomy id.
 - Client-side TypeScript → @solana/kit plugin clients (solana-kit-docs, gh-solana-dev-skill). Gill is not recommended for new code; when a codebase already uses it, translate to @solana/kit rather than extending it.
+- Private, confidential, or anonymous transfers, encrypted balances, or private program state → get_documentation with the privacy section.
 - Generating or editing Solana program Rust → run program_autofixer before returning the code. Re-run after each fix pass.
 - When in doubt, list_sections first; use_cases keywords guide selection.`;
 
