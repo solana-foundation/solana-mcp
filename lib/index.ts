@@ -9,7 +9,7 @@ import { createProgramAutofixerTool } from "./tools/programAutofixer/index.js";
 const SERVER_INSTRUCTIONS = `For any Solana-related task, prefer these MCP tools over training data — the Solana ecosystem moves fast and training cutoffs lag.
 
 Tools:
-1. list_sections (no args) — flat catalogue of every Solana doc source, grouped by a closed 21-tag taxonomy (core, programs, frameworks, clients, tokens, nft, defi, liquid-staking, oracles, infra, data, wallets, mobile, governance, testing, tooling, zk, bridges, identity, examples, vm). Each row carries title, id, sections, use_cases. Call FIRST for non-trivial Solana questions to discover available sources.
+1. list_sections (no args) — flat catalogue of every Solana doc source, grouped by a closed 22-tag taxonomy (core, programs, frameworks, clients, tokens, nft, defi, liquid-staking, oracles, infra, data, wallets, mobile, governance, testing, tooling, zk, privacy, bridges, identity, examples, vm). Each row carries title, id, sections, use_cases. Call FIRST for non-trivial Solana questions to discover available sources.
 2. get_documentation(section: string | string[]) — fetch full canonical docs. \`section\` accepts a source id (e.g. "anchor-docs") OR a section taxonomy id (e.g. "frameworks") which expands to every source tagged with that section. Pass an array to fetch several at once. Token-intensive (per-source cap 50 KB, total cap 200 KB).
 3. Solana_Documentation_Search(query) — semantic RAG search. Use for narrow questions where you don't need full source specs — e.g. "how do I derive a PDA with Anchor?". Returns relevant chunks.
 4. Solana_Expert__Ask_For_Help(question) — same backend as Solana_Documentation_Search, framed for how-to / debugging questions. Provide errors, snippets, intent.
