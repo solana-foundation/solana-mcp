@@ -250,7 +250,6 @@ export async function runProgramAutofixer({
   output.framework_detected = detectedFramework;
 
   const ctx: VisitorContext = {
-    source: code,
     filename,
     framework: resolvedFramework,
     output,

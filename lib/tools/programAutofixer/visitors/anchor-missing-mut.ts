@@ -14,16 +14,6 @@ const MUTATING_METHODS = new Set([
   "set_inner",
 ]);
 
-interface MissingMutState {
-  reported: Set<string>; // location keys to dedupe
-}
-
-function getState(ctx: VisitorContext): MissingMutState {
-  const bag = ctx as unknown as { __anchorMissingMut?: MissingMutState };
-  if (!bag.__anchorMissingMut) bag.__anchorMissingMut = { reported: new Set<string>() };
-  return bag.__anchorMissingMut;
-}
-
 function emitIfFieldLacksMut(node: Node, fieldName: string, ctx: VisitorContext): void {
   const candidates = findFieldsForHandlerContext(ctx.anchor, node, fieldName);
   if (candidates.length === 0) return;
@@ -47,10 +37,6 @@ function emitIfFieldLacksMut(node: Node, fieldName: string, ctx: VisitorContext)
   });
   if (allReadOnlyByType) return;
   const location = formatLocation(ctx.filename, node);
-  const state = getState(ctx);
-  const dedupeKey = `${fieldName}|${location}`;
-  if (state.reported.has(dedupeKey)) return;
-  state.reported.add(dedupeKey);
   report(ctx, anchorMissingMut, {
     title: `Mutation of ctx.accounts.${fieldName} without \`mut\` constraint`,
     location,

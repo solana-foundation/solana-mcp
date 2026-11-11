@@ -103,8 +103,9 @@ describe("databricks vectorSearch (managed AI Search MCP)", () => {
   it("calls the ai-search MCP tool with query + _meta, oversampling num_results (k*3)", async () => {
     fetchMock.mockResolvedValueOnce(mcpResponse([]));
 
+    process.env.DATABRICKS_VS_K = "5";
     const { searchDocs } = await import("../../lib/services/databricks/vectorSearch.js");
-    await searchDocs("how to derive a PDA", 5);
+    await searchDocs("how to derive a PDA");
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
@@ -210,8 +211,9 @@ describe("databricks vectorSearch (managed AI Search MCP)", () => {
       ]),
     );
 
+    process.env.DATABRICKS_VS_K = "3";
     const { searchDocs } = await import("../../lib/services/databricks/vectorSearch.js");
-    const chunks = await searchDocs("versioned", 3);
+    const chunks = await searchDocs("versioned");
 
     expect(chunks).toHaveLength(3);
     expect(chunks[0].id).toBe("a");
@@ -227,8 +229,9 @@ describe("databricks vectorSearch (managed AI Search MCP)", () => {
       ]),
     );
 
+    process.env.DATABRICKS_VS_K = "5";
     const { searchDocs } = await import("../../lib/services/databricks/vectorSearch.js");
-    const chunks = await searchDocs("x", 5);
+    const chunks = await searchDocs("x");
     expect(chunks.map(c => c.id)).toEqual(["id-1", "id-2"]);
   });
 
@@ -242,8 +245,9 @@ describe("databricks vectorSearch (managed AI Search MCP)", () => {
       ]),
     );
 
+    process.env.DATABRICKS_VS_K = "20";
     const { searchDocs } = await import("../../lib/services/databricks/vectorSearch.js");
-    const chunks = await searchDocs("q", 20);
+    const chunks = await searchDocs("q");
     expect(chunks.map(c => c.id)).toEqual(["a", "d"]);
   });
 
@@ -255,7 +259,7 @@ describe("databricks vectorSearch (managed AI Search MCP)", () => {
     expect((JSON.parse(init.body as string) as ToolCallBody).params._meta.num_results).toBe("50");
   });
 
-  it("reads DATABRICKS_VS_K env when arg omitted", async () => {
+  it("reads k from DATABRICKS_VS_K", async () => {
     process.env.DATABRICKS_VS_K = "12";
     fetchMock.mockResolvedValueOnce(mcpResponse([]));
     const { searchDocs } = await import("../../lib/services/databricks/vectorSearch.js");
@@ -264,10 +268,11 @@ describe("databricks vectorSearch (managed AI Search MCP)", () => {
     expect((JSON.parse(init.body as string) as ToolCallBody).params._meta.num_results).toBe("36");
   });
 
-  it("caps k at 50 regardless of arg or env", async () => {
+  it("caps k at 50", async () => {
     fetchMock.mockResolvedValueOnce(mcpResponse([]));
+    process.env.DATABRICKS_VS_K = "9999";
     const { searchDocs } = await import("../../lib/services/databricks/vectorSearch.js");
-    await searchDocs("hello", 9999);
+    await searchDocs("hello");
     const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
     expect((JSON.parse(init.body as string) as ToolCallBody).params._meta.num_results).toBe("50");
   });

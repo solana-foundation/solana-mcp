@@ -28,7 +28,6 @@ export interface AutofixerOutput {
 }
 
 export interface VisitorContext {
-  source: string;
   filename: string;
   framework: Framework;
   output: AutofixerOutput;

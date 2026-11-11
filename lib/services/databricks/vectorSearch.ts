@@ -30,8 +30,7 @@ const OVERSAMPLE_MULTIPLIER = 3;
 // to fewer results than requested.
 const RERANK_MAX_RESULTS = 50;
 
-function resolveK(k?: number): number {
-  if (typeof k === "number" && Number.isInteger(k) && k > 0) return Math.min(k, MAX_K);
+function resolveK(): number {
   const envK = Number(process.env.DATABRICKS_VS_K);
   if (Number.isInteger(envK) && envK > 0) return Math.min(envK, MAX_K);
   return DEFAULT_K;
@@ -60,8 +59,8 @@ function resolveMcpTarget(): McpTarget | null {
   };
 }
 
-export async function searchDocs(query: string, k?: number): Promise<DocChunk[]> {
-  const topK = resolveK(k);
+export async function searchDocs(query: string): Promise<DocChunk[]> {
+  const topK = resolveK();
   if (!isDatabricksConfigured()) {
     console.warn("[vectorSearch] Databricks host/token not set — retrieval disabled");
     return [];
