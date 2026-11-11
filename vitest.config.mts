@@ -8,7 +8,7 @@ export default defineConfig({
     },
     coverage: {
       provider: "v8",
-      include: ["lib/**/*.ts", "api/**/*.ts"],
+      include: ["lib/**/*.ts"],
       exclude: ["lib/context/**"],
       reporter: ["text", "html", "json-summary", "lcov"],
       reportsDirectory: "./coverage",

@@ -24,14 +24,6 @@ const DISCRIMINATOR_CALLS = new Set(["validate_discriminator", "check_discrimina
 
 const SYSVAR_VERIFY_CALLS = new Set(["verify_sysvar", "assert_sysvar"]);
 
-const PROGRAM_VERIFY_CALLS = new Set([
-  "verify_system_program",
-  "verify_token_program",
-  "verify_associated_token_program",
-  "verify_token_2022_program",
-  "verify_program_id",
-]);
-
 const FROM_BYTES_NAMES = new Set(["from_bytes", "from_bytes_mut", "from_bytes_unchecked"]);
 
 const CHECKED_ARITHMETIC_METHODS = new Set([
@@ -393,7 +385,6 @@ export {
   VERIFY_OWNER_CALLS,
   DISCRIMINATOR_CALLS,
   SYSVAR_VERIFY_CALLS,
-  PROGRAM_VERIFY_CALLS,
   FROM_BYTES_NAMES,
   CHECKED_ARITHMETIC_METHODS,
 };

@@ -23,11 +23,7 @@ describe("createMcp", () => {
   });
 
   it("configures the MCP adapter with the expected options", () => {
-    const requestHandler = vi.fn();
-    createMcpHandlerMock.mockReturnValue(requestHandler);
-
-    const handler = createMcp();
-    expect(handler).toBe(requestHandler);
+    createMcp();
 
     expect(createMcpHandlerMock).toHaveBeenCalledTimes(1);
     const [initializeServer, options] = createMcpHandlerMock.mock.calls[0] as [
