@@ -10,6 +10,9 @@
 # url_include: optional list of case-insensitive substrings. Applied after URL
 #   collection (sitemap/BFS/ingest_urls) — URL is kept only if it contains at
 #   least one substring. Use for multi-chain doc sites to filter to Solana-only.
+# url_exclude: optional list of case-insensitive substrings. A URL that contains
+#   any of them is dropped. Applies to web and github sources (for github, the
+#   URL is the file's blob URL, so repo paths like `legacy/` work).
 #
 # sections: list of taxonomy tags. Surfaces the source in `list_sections`
 #   under each tag. Multi-tag is first-class (e.g. anchor → [frameworks,
@@ -576,20 +579,11 @@ sources:
     name: MagicBlock Docs
     kind: web
     enabled: true
-    sections: [infra, privacy, oracles]
+    sections: [infra, oracles]
     use_cases: "MagicBlock Ephemeral Rollups for gasless, real-time, low-latency, high-frequency transactions (games, trading, payments), delegating accounts to a rollup and committing or undelegating state back to Solana, Magic Router, Magic Actions, Ephemeral Accounts, Private Ephemeral Rollups (TEE) with access control, private SPL payments, ephemeral SPL tokens, VRF randomness, real-time price feeds, cranks and scheduled tasks, session keys, local ephemeral validator"
     primary_url: https://docs.magicblock.gg
     sitemaps: [https://docs.magicblock.gg/sitemap.xml]
     url_include: [docs.magicblock.gg/pages/]
-
-  - id: magicblock-payments-api
-    name: MagicBlock Payments API (OpenAPI)
-    kind: openapi
-    enabled: true
-    sections: [privacy, tokens]
-    use_cases: "MagicBlock Payments API OpenAPI spec: private and gasless SPL token deposits, transfers and withdrawals (sponsored fees, no SOL needed), balances, merchant checkout and payment links, x402 and MPP payments, token swaps, unsigned transaction builders"
-    primary_url: https://payments.magicblock.app
-    spec_url: https://payments.magicblock.app/doc
 
   # --- Explorers / data providers ---
   - id: solscan-docs
@@ -1218,7 +1212,8 @@ sources:
     sections: [examples, programs]
     use_cases: "MagicBlock Ephemeral Rollups example programs: counter, delegation and commits, Magic Actions, gasless starter, ephemeral accounts, VRF dice and rewards, rock-paper-scissors, sealed auction, oracle-priced purchase, SPL tokens, private counter, cranks, session keys"
     primary_url: https://github.com/magicblock-labs/magicblock-examples
-    github: { owner: magicblock-labs, repo: magicblock-examples, include_readmes: true, include_source_code: false }
+    url_exclude: [00-LEGACY_EXAMPLES/, LICENSE.md, /target/]
+    github: { owner: magicblock-labs, repo: magicblock-examples, include_readmes: true, include_source_code: true }
 
   # --- Additional DEX / AMM / Perps program repos ---
   - id: gh-orca-whirlpools
@@ -1446,6 +1441,15 @@ sources:
     use_cases: "Solana Privacy Rings example code, Rust and TypeScript clients for registering a private wallet, deposit, private transfer, withdraw, syncing private balances and reading private history, confidential swap and timelock escrow ZK programs on the shielded pool"
     primary_url: https://github.com/helius-labs/zolana-examples
     github: { owner: helius-labs, repo: zolana-examples, include_readmes: true, include_source_code: true }
+
+  - id: magicblock-payments-api
+    name: MagicBlock Payments API (OpenAPI)
+    kind: openapi
+    enabled: true
+    sections: [privacy, tokens]
+    use_cases: "MagicBlock Payments API OpenAPI spec: private and gasless SPL token deposits, transfers and withdrawals (sponsored fees, no SOL needed), balances, merchant checkout and payment links, x402 and MPP payments, token swaps, unsigned transaction builders"
+    primary_url: https://payments.magicblock.app
+    spec_url: https://payments.magicblock.app/doc
 
   # --- Additional Liquid staking / Stake pools ---
   - id: gh-marinade-liquid-staking
