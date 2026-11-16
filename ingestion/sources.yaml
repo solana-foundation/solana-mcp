@@ -329,6 +329,15 @@ sources:
     primary_url: https://github.com/solana-foundation/solana-dev-skill
     github: { owner: solana-foundation, repo: solana-dev-skill, include_readmes: true, include_source_code: false }
 
+  - id: gh-magicblock-dev-skill
+    name: GitHub magicblock-labs/magicblock-dev-skill
+    kind: github
+    enabled: true
+    sections: [programs, clients, examples]
+    use_cases: "MagicBlock agent playbook: choosing between Ephemeral Rollups, Private Ephemeral Rollups, VRF, price feeds, cranks and session keys; delegate, commit and undelegate flows; Magic Actions; ephemeral SPL tokens and private payments; fees, security and debugging common errors"
+    primary_url: https://github.com/magicblock-labs/magicblock-dev-skill
+    github: { owner: magicblock-labs, repo: magicblock-dev-skill, include_readmes: true, include_source_code: false }
+
   - id: gh-gill
     name: GitHub gillsdk/gill (legacy — prefer @solana/kit plugins)
     kind: github
@@ -562,6 +571,25 @@ sources:
     use_cases: "Flux RPC offers the freshest data, and transparent, by-the-byte billing"
     primary_url: https://fluxrpc.com/docs/rpc
     sitemaps: [https://fluxrpc.com/main-sitemap.xml]
+
+  - id: magicblock-docs
+    name: MagicBlock Docs
+    kind: web
+    enabled: true
+    sections: [infra, privacy, oracles]
+    use_cases: "MagicBlock Ephemeral Rollups for gasless, real-time, low-latency, high-frequency transactions (games, trading, payments), delegating accounts to a rollup and committing or undelegating state back to Solana, Magic Router, Magic Actions, Ephemeral Accounts, Private Ephemeral Rollups (TEE) with access control, private SPL payments, ephemeral SPL tokens, VRF randomness, real-time price feeds, cranks and scheduled tasks, session keys, local ephemeral validator"
+    primary_url: https://docs.magicblock.gg
+    sitemaps: [https://docs.magicblock.gg/sitemap.xml]
+    url_include: [docs.magicblock.gg/pages/]
+
+  - id: magicblock-payments-api
+    name: MagicBlock Payments API (OpenAPI)
+    kind: openapi
+    enabled: true
+    sections: [privacy, tokens]
+    use_cases: "MagicBlock Payments API OpenAPI spec: private and gasless SPL token deposits, transfers and withdrawals (sponsored fees, no SOL needed), balances, merchant checkout and payment links, x402 and MPP payments, token swaps, unsigned transaction builders"
+    primary_url: https://payments.magicblock.app
+    spec_url: https://payments.magicblock.app/doc
 
   # --- Explorers / data providers ---
   - id: solscan-docs
@@ -1182,6 +1210,15 @@ sources:
     use_cases: "Sealevel attacks reference, common Anchor security pitfalls, missing signer/owner checks, account confusion"
     primary_url: https://github.com/coral-xyz/sealevel-attacks
     github: { owner: coral-xyz, repo: sealevel-attacks, include_readmes: true, include_source_code: true }
+
+  - id: gh-magicblock-examples
+    name: GitHub magicblock-labs/magicblock-examples
+    kind: github
+    enabled: true
+    sections: [examples, programs]
+    use_cases: "MagicBlock Ephemeral Rollups example programs: counter, delegation and commits, Magic Actions, gasless starter, ephemeral accounts, VRF dice and rewards, rock-paper-scissors, sealed auction, oracle-priced purchase, SPL tokens, private counter, cranks, session keys"
+    primary_url: https://github.com/magicblock-labs/magicblock-examples
+    github: { owner: magicblock-labs, repo: magicblock-examples, include_readmes: true, include_source_code: false }
 
   # --- Additional DEX / AMM / Perps program repos ---
   - id: gh-orca-whirlpools
