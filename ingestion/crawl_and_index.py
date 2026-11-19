@@ -277,9 +277,10 @@ def url_matches_exclude(url: str, patterns: list[str]) -> bool:
 
 # Generic non-English locale path segments commonly used by docs platforms
 # (Fumadocs, Nextra, Docusaurus i18n, Mintlify). English pages live at root
-# or under `/en/`, so these are always safe to skip.
+# or under `/en/`, so these are always safe to skip. `cn` and `jp` are country
+# codes some sites use in place of `zh` and `ja` (docs.magicblock.gg does).
 LOCALE_PATTERN = re.compile(
-    r"/(de|es|fr|ja|ko|ru|zh|zh-cn|zh-tw|pt|pt-br|it|tr|vi|id|ar|hi|th|pl|nl|cs|uk|sv|no|da|fi|el|ro|hu|he|bn|uz|tl|sr|hr|bg|ca|sk|sl|lt|lv|et|ms|fa|ur)(/|$)",
+    r"/(de|es|fr|ja|jp|ko|ru|zh|zh-cn|zh-tw|cn|pt|pt-br|it|tr|vi|id|ar|hi|th|pl|nl|cs|uk|sv|no|da|fi|el|ro|hu|he|bn|uz|tl|sr|hr|bg|ca|sk|sl|lt|lv|et|ms|fa|ur)(/|$)",
     re.IGNORECASE,
 )
 
@@ -396,6 +397,7 @@ def crawl_github(source: dict, now: datetime) -> list[Chunk]:
     gh = source["github"]
     owner, repo = gh["owner"], gh["repo"]
     include_src = bool(gh.get("include_source_code"))
+    excludes = source.get("url_exclude") or []
     repo_url = f"https://github.com/{owner}/{repo}.git"
 
     chunks: list[Chunk] = []
@@ -415,17 +417,17 @@ def crawl_github(source: dict, now: datetime) -> list[Chunk]:
                 continue
             ext = f.suffix.lower()
             rel = f.relative_to(dst).as_posix()
+            url = f"https://github.com/{owner}/{repo}/blob/HEAD/{rel}"
+            title = f"{repo}/{rel}"
+            if url_matches_exclude(url, excludes):
+                continue
             if ext in GH_DOC_EXTS:
                 body = f.read_text(encoding="utf-8", errors="ignore")
-                url = f"https://github.com/{owner}/{repo}/blob/HEAD/{rel}"
-                title = f"{repo}/{rel}"
                 chunks.extend(chunks_from_markdown(source_id, url, title, body, now))
             elif include_src and ext in GH_CODE_EXTS:
                 body = f.read_text(encoding="utf-8", errors="ignore")
                 if len(body) > 200_000:
                     continue  # skip giant generated files
-                url = f"https://github.com/{owner}/{repo}/blob/HEAD/{rel}"
-                title = f"{repo}/{rel}"
                 wrapped = f"```{ext.lstrip('.')}\n{body}\n```"
                 chunks.extend(chunks_from_markdown(source_id, url, title, wrapped, now))
     log.info("source %s: %d chunks", source_id, len(chunks))
@@ -437,6 +439,43 @@ def crawl_github(source: dict, now: datetime) -> list[Chunk]:
 # MAGIC ## OpenAPI crawler
 
 # COMMAND ----------
+
+def _resolve_schema(schema, spec: dict, depth: int = 0) -> dict:
+    """Follow local `$ref`s and merge `allOf`, so a schema reads as one flat object."""
+    if not isinstance(schema, dict) or depth > 8:
+        return {}
+    ref = schema.get("$ref")
+    if isinstance(ref, str) and ref.startswith("#/"):
+        target = spec
+        for part in ref[2:].split("/"):
+            target = target.get(part, {}) if isinstance(target, dict) else {}
+        return _resolve_schema(target, spec, depth + 1)
+    if "allOf" in schema:
+        merged = {**schema, "properties": dict(schema.get("properties") or {}), "required": list(schema.get("required") or [])}
+        for sub in schema["allOf"]:
+            part = _resolve_schema(sub, spec, depth + 1)
+            merged["properties"].update(part.get("properties") or {})
+            merged["required"] += part.get("required") or []
+        return merged
+    return schema
+
+def _schema_type(schema, spec: dict, depth: int = 0) -> str:
+    """Short type label for a property: `string`, `array of integer`, an enum's values, or a named object."""
+    resolved = _resolve_schema(schema, spec)
+    if depth > 4:
+        return resolved.get("type") or "any"
+    if resolved.get("enum"):
+        return " | ".join(f"`{v}`" for v in resolved["enum"])
+    variants = resolved.get("anyOf") or resolved.get("oneOf")
+    if variants:
+        return " or ".join(_schema_type(v, spec, depth + 1) for v in variants)
+    kind = resolved.get("type") or "any"
+    if kind == "array":
+        return f"array of {_schema_type(resolved.get('items') or {}, spec, depth + 1)}"
+    ref = schema.get("$ref") if isinstance(schema, dict) else None
+    if kind == "object" and isinstance(ref, str):
+        return ref.rsplit("/", 1)[-1]
+    return kind
 
 def crawl_openapi(source: dict, client: httpx.Client, now: datetime) -> list[Chunk]:
     source_id = source["id"]
@@ -460,7 +499,23 @@ def crawl_openapi(source: dict, client: httpx.Client, now: datetime) -> list[Chu
             desc = op.get("description") or ""
             params = op.get("parameters") or []
             param_lines = [f"- `{p.get('name')}` ({p.get('in')}): {p.get('description','')}" for p in params]
-            body = f"## {method.upper()} {path}\n\n{summary}\n\n{desc}\n\n### Parameters\n" + "\n".join(param_lines)
+            body = f"## {method.upper()} {path}\n\n{summary}\n\n{desc}"
+            if param_lines:
+                body += "\n\n### Parameters\n" + "\n".join(param_lines)
+
+            # Most POST operations take their inputs as a JSON body, not parameters.
+            request_body = _resolve_schema(op.get("requestBody"), spec)
+            json_body = ((request_body.get("content") or {}).get("application/json") or {}).get("schema")
+            schema = _resolve_schema(json_body, spec)
+            required = set(schema.get("required") or [])
+            body_lines = []
+            for name, prop in (schema.get("properties") or {}).items():
+                note = ", required" if name in required else ""
+                prop_desc = (prop.get("description") if isinstance(prop, dict) else None) or _resolve_schema(prop, spec).get("description") or ""
+                line = f"- `{name}` ({_schema_type(prop, spec)}{note})"
+                body_lines.append(f"{line}: {prop_desc}" if prop_desc else line)
+            if body_lines:
+                body += "\n\n### Request body (application/json)\n" + "\n".join(body_lines)
             chunks.extend(chunks_from_markdown(
                 source_id, f"{citation}#{method.upper()}-{path}",
                 f"{method.upper()} {path}", body, now,
