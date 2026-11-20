@@ -37,7 +37,7 @@
 {"id":"q037","category":"defi","question":"How do I swap tokens on Raydium AMM?","expected_keywords":["Raydium","AMM","swap","pool"]}
 {"id":"q038","category":"defi","question":"How do I integrate Kamino lending into my app?","expected_keywords":["Kamino","lending","deposit","borrow"]}
 {"id":"q039","category":"defi","question":"How do I stake SOL via Marinade?","expected_keywords":["Marinade","mSOL","stake","liquid staking"]}
-{"id":"q040","category":"defi","question":"How do I place a perps order on Drift?","expected_keywords":["Drift","perps","order","margin"]}
+{"id":"q040","category":"defi","question":"How do I place a perps order on Velocity Exchange (formerly Drift)?","expected_keywords":["Velocity","perps","order","margin"]}
 {"id":"q041","category":"wallet","question":"How do I integrate Phantom wallet in my React dApp?","expected_keywords":["Phantom","window.solana","connect","signTransaction"]}
 {"id":"q042","category":"wallet","question":"How do I use Solana Mobile Stack's wallet adapter on Android?","expected_keywords":["Mobile Wallet Adapter","MWA","Solana Mobile","Android"]}
 {"id":"q043","category":"wallet","question":"How do I use Squads multisig for program upgrades?","expected_keywords":["Squads","multisig","vault","threshold"]}

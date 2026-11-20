@@ -225,13 +225,13 @@ sources:
 
   # --- Core GitHub repos (READMEs + source) ---
   - id: gh-anchor
-    name: GitHub solana-foundation/anchor
+    name: GitHub otter-sec/anchor
     kind: github
     enabled: true
     sections: [frameworks, programs]
     use_cases: "Anchor framework source, accounts macro internals, IDL generation, anchor-lang crate, anchor-cli"
-    primary_url: https://github.com/solana-foundation/anchor
-    github: { owner: solana-foundation, repo: anchor, include_readmes: true, include_source_code: true }
+    primary_url: https://github.com/otter-sec/anchor
+    github: { owner: otter-sec, repo: anchor, include_readmes: true, include_source_code: true }
 
   - id: gh-kit
     name: GitHub anza-xyz/kit (Solana JS SDK)
@@ -315,13 +315,13 @@ sources:
     github: { owner: solana-foundation, repo: solana-improvement-documents, include_readmes: false, include_source_code: true }
 
   - id: gh-program-examples
-    name: GitHub solana-developers/program-examples
+    name: GitHub solana-foundation/program-examples
     kind: github
     enabled: true
     sections: [examples, programs, frameworks]
     use_cases: "Solana program examples, Anchor + native + Pinocchio reference programs, common patterns, tutorial code"
-    primary_url: https://github.com/solana-developers/program-examples
-    github: { owner: solana-developers, repo: program-examples, include_readmes: false, include_source_code: true }
+    primary_url: https://github.com/solana-foundation/program-examples
+    github: { owner: solana-foundation, repo: program-examples, include_readmes: false, include_source_code: true }
 
   - id: gh-solana-dev-skill
     name: GitHub solana-foundation/solana-dev-skill
@@ -459,6 +459,15 @@ sources:
     primary_url: https://github.com/solana-program/program-metadata
     github: { owner: solana-program, repo: program-metadata, include_readmes: true, include_source_code: true }
 
+  - id: gh-spl-stake-pool
+    name: SPL Stake Pool
+    kind: github
+    enabled: true
+    sections: [liquid-staking, programs]
+    use_cases: "SPL stake pool program, liquid staking tokens (LST) minting, stake pool deposits and withdrawals, validator stake management"
+    primary_url: https://github.com/solana-program/stake-pool
+    github: { owner: solana-program, repo: stake-pool, include_readmes: true, include_source_code: true }
+
   # --- Metaplex programs (NFT / Token metadata standards) ---
   - id: metaplex-docs
     name: Metaplex Docs
@@ -571,7 +580,7 @@ sources:
     kind: web
     enabled: true
     sections: [infra, data]
-    use_cases: "Flux RPC offers the freshest data, and transparent, by-the-byte billing"
+    use_cases: "Solana RPC methods, WebSocket subscriptions, RugCheck token risk scoring guides, by-the-byte billing"
     primary_url: https://fluxrpc.com/docs/rpc
     sitemaps: [https://fluxrpc.com/main-sitemap.xml]
 
@@ -672,24 +681,14 @@ sources:
     sitemaps: [https://docs.dune.com/sitemap.xml]
     url_include: [solana]
 
-  - id: pumpportal-docs
-    name: PumpPortal Docs
-    kind: web
-    enabled: true
-    sections: [data, defi]
-    use_cases: "PumpPortal API, pump.fun token data, real-time launches, trading API"
-    primary_url: https://pumpportal.fun
-    sitemaps: [https://pumpportal.fun/sitemap.xml]
-
-  - id: rugcheck-docs
-    name: RugCheck Docs
-    kind: web
+  - id: rugcheck-api
+    name: RugCheck API (OpenAPI)
+    kind: openapi
     enabled: true
     sections: [data, tokens, defi]
-    use_cases: "RugCheck provides token scoring using on-chain data. A free API is available."
-    primary_url: https://fluxrpc.com
-    sitemaps: [https://fluxrpc.com/main-sitemap.xml]
-    url_include: ["/docs/rugcheck"]
+    use_cases: "RugCheck API spec, token risk scoring, rug pull and scam detection, token reports, insider and holder analysis"
+    primary_url: https://api.rugcheck.xyz/swagger/index.html
+    spec_url: https://api.rugcheck.xyz/swagger/doc.json
 
   # --- Wallets ---
   - id: phantom-docs
@@ -767,15 +766,6 @@ sources:
     primary_url: https://docs.meteora.ag
     sitemaps: [https://docs.meteora.ag/sitemap.xml]
 
-  - id: goosefx-docs
-    name: GooseFX Docs
-    kind: web
-    enabled: true
-    sections: [defi]
-    use_cases: "GooseFX SSL pools, perps, single-sided liquidity, GOFX token"
-    primary_url: https://docs.goosefx.io
-    sitemaps: [https://docs.goosefx.io/sitemap.xml]
-
   - id: fluxbeam-docs
     name: FluxBeam Docs
     kind: web
@@ -785,68 +775,14 @@ sources:
     primary_url: https://docs.fluxbeam.xyz/
     sitemaps: [https://docs.fluxbeam.xyz/sitemap.xml]
 
-  - id: lifinity-docs
-    name: Lifinity Docs
+  - id: velocity-docs
+    name: Velocity Exchange Docs (formerly Drift)
     kind: web
     enabled: true
     sections: [defi]
-    use_cases: "Lifinity proactive market maker, oracle-based AMM, low impermanent loss strategy"
-    primary_url: https://docs.lifinity.io
-    sitemaps: [https://docs.lifinity.io/sitemap.xml]
-
-  - id: flash-trade-docs
-    name: Flash.Trade Docs
-    kind: web
-    enabled: true
-    sections: [defi]
-    use_cases: "Flash.Trade perpetuals exchange, leverage trading, liquidity providing for perps"
-    primary_url: https://docs.flash.trade
-    sitemaps: [https://docs.flash.trade/flash-trade/sitemap.xml]
-
-  - id: zeta-docs
-    name: Zeta Docs
-    kind: web
-    enabled: true
-    sections: [defi]
-    use_cases: "Zeta options and perps, derivatives trading, options chain, perp futures"
-    primary_url: https://docs.zeta.markets/
-    sitemaps: [https://docs.zeta.markets/sitemap.xml]
-
-  - id: drift-docs
-    name: Drift Docs
-    kind: web
-    enabled: true
-    sections: [defi]
-    use_cases: "Drift Protocol perpetuals, spot, lending, JIT auctions, cross-margin"
-    primary_url: https://docs.drift.trade
-    start_urls: [https://docs.drift.trade]
-
-  - id: drift-v2-teacher
-    name: Drift v2 API Docs
-    kind: web
-    enabled: true
-    sections: [defi]
-    use_cases: "Drift v2 SDK reference, perp/spot order placement, account management, order book interaction"
-    primary_url: https://drift-labs.github.io/v2-teacher
-    ingest_urls: [https://drift-labs.github.io/v2-teacher]
-
-  - id: drift-data-api
-    name: Drift Data API (OpenAPI)
-    kind: openapi
-    enabled: true
-    sections: [defi, data]
-    use_cases: "Drift Data API OpenAPI spec, historical trade data, market stats, funding rates"
-    primary_url: https://data.api.drift.trade/playground
-    spec_url: https://data.api.drift.trade/playground/json
-
-  - id: gh-drift-protocol-v2
-    name: GitHub drift-labs/protocol-v2
-    kind: github
-    enabled: true
-    sections: [defi, programs]
-    use_cases: "Drift v2 on-chain program source, perp engine, AMM logic, liquidation engine"
-    primary_url: https://github.com/drift-labs/protocol-v2
-    github: { owner: drift-labs, repo: protocol-v2, include_readmes: true, include_source_code: true }
+    use_cases: "Velocity Exchange (formerly Drift Protocol) perpetual futures, borrow and lend, cross-margin, liquidations, Velocity SDK, velocity-rs, market makers, trading automation"
+    primary_url: https://docs.velocity.exchange
+    sitemaps: [https://docs.velocity.exchange/sitemap.xml]
 
   - id: kamino-docs
     name: Kamino Docs
@@ -989,24 +925,6 @@ sources:
     primary_url: https://github.com/deanmlittle/solana-winternitz
     github: { owner: deanmlittle, repo: solana-winternitz, include_readmes: true, include_source_code: true }
 
-  - id: gh-deanmlittle-p-token
-    name: GitHub deanmlittle/p-token
-    kind: github
-    enabled: true
-    sections: [examples, programs, tokens]
-    use_cases: "p-token program, Pinocchio-based reimplementation of SPL Token, performance comparison"
-    primary_url: https://github.com/deanmlittle/p-token
-    github: { owner: deanmlittle, repo: p-token, include_readmes: true, include_source_code: true }
-
-  - id: gh-solana-nodep-vault-2025
-    name: GitHub deanmlittle/solana-nodep-vault-2025
-    kind: github
-    enabled: true
-    sections: [examples, programs]
-    use_cases: "No-dependency Solana vault 2025 patterns, native program without solana-program crate, ultra-light vault"
-    primary_url: https://github.com/deanmlittle/solana-nodep-vault-2025
-    github: { owner: deanmlittle, repo: solana-nodep-vault-2025, include_readmes: true, include_source_code: true }
-
   - id: gh-native-escrow-2024
     name: GitHub deanmlittle/native-escrow-2024
     kind: github
@@ -1015,15 +933,6 @@ sources:
     use_cases: "Native (no-Anchor) escrow program 2024, raw account parsing, manual instruction dispatch"
     primary_url: https://github.com/deanmlittle/native-escrow-2024
     github: { owner: deanmlittle, repo: native-escrow-2024, include_readmes: true, include_source_code: true }
-
-  - id: gh-native-vault-2024
-    name: GitHub deanmlittle/native-vault-2024
-    kind: github
-    enabled: true
-    sections: [examples, programs]
-    use_cases: "Native vault program 2024, raw Solana program patterns, deposit/withdraw without framework"
-    primary_url: https://github.com/deanmlittle/native-vault-2024
-    github: { owner: deanmlittle, repo: native-vault-2024, include_readmes: true, include_source_code: true }
 
   - id: gh-solana-transaction-introspection
     name: GitHub deanmlittle/solana-transaction-introspection
@@ -1042,15 +951,6 @@ sources:
     use_cases: "Ed25519 signature verification via precompile, ed25519 instruction sysvar pattern"
     primary_url: https://github.com/deanmlittle/solana-ed25519-instruction
     github: { owner: deanmlittle, repo: solana-ed25519-instruction, include_readmes: true, include_source_code: true }
-
-  - id: gh-anchor-instruction-sysvar
-    name: GitHub deanmlittle/anchor-instruction-sysvar
-    kind: github
-    enabled: true
-    sections: [examples, frameworks, programs]
-    use_cases: "Anchor instruction sysvar pattern, validating sibling instructions in Anchor"
-    primary_url: https://github.com/deanmlittle/anchor-instruction-sysvar
-    github: { owner: deanmlittle, repo: anchor-instruction-sysvar, include_readmes: true, include_source_code: true }
 
   - id: gh-anchor-amm-2023
     name: GitHub deanmlittle/anchor-amm-2023
@@ -1096,24 +996,6 @@ sources:
     use_cases: "Anchor token vesting program 2024, time-based unlock schedules, treasury vesting"
     primary_url: https://github.com/deanmlittle/anchor-vesting-2024
     github: { owner: deanmlittle, repo: anchor-vesting-2024, include_readmes: true, include_source_code: true }
-
-  - id: gh-anchor-example-contracts
-    name: GitHub deanmlittle/AnchorExampleContracts
-    kind: github
-    enabled: true
-    sections: [examples, frameworks, programs]
-    use_cases: "Collection of Anchor example contracts, common patterns, reference programs"
-    primary_url: https://github.com/deanmlittle/AnchorExampleContracts
-    github: { owner: deanmlittle, repo: AnchorExampleContracts, include_readmes: true, include_source_code: true }
-
-  - id: gh-anchor-escrow-introspection
-    name: GitHub deanmlittle/anchor-escrow-introspection
-    kind: github
-    enabled: true
-    sections: [examples, frameworks, programs]
-    use_cases: "Anchor escrow with instruction introspection, advanced security pattern"
-    primary_url: https://github.com/deanmlittle/anchor-escrow-introspection
-    github: { owner: deanmlittle, repo: anchor-escrow-introspection, include_readmes: true, include_source_code: true }
 
   - id: gh-solana-rsa-program
     name: GitHub deanmlittle/solana-rsa-program
@@ -1234,15 +1116,6 @@ sources:
     primary_url: https://github.com/raydium-io/raydium-clmm
     github: { owner: raydium-io, repo: raydium-clmm, include_readmes: true, include_source_code: true }
 
-  - id: gh-saber-stable-swap
-    name: GitHub saber-hq/stable-swap
-    kind: github
-    enabled: true
-    sections: [defi, programs]
-    use_cases: "Saber stable-swap AMM, Curve-style stableswap on Solana"
-    primary_url: https://github.com/saber-hq/stable-swap
-    github: { owner: saber-hq, repo: stable-swap, include_readmes: true, include_source_code: true }
-
   - id: gh-openbook-v2
     name: GitHub openbook-dex/openbook-v2
     kind: github
@@ -1251,33 +1124,6 @@ sources:
     use_cases: "OpenBook v2 central limit order book, on-chain order matching, market making"
     primary_url: https://github.com/openbook-dex/openbook-v2
     github: { owner: openbook-dex, repo: openbook-v2, include_readmes: true, include_source_code: true }
-
-  - id: gh-openbook
-    name: GitHub openbook-dex/program
-    kind: github
-    enabled: true
-    sections: [defi, programs]
-    use_cases: "OpenBook v1 (Serum fork) order book program source"
-    primary_url: https://github.com/openbook-dex/program
-    github: { owner: openbook-dex, repo: program, include_readmes: true, include_source_code: true }
-
-  - id: gh-serum-dex
-    name: GitHub project-serum/serum-dex
-    kind: github
-    enabled: true
-    sections: [defi, programs]
-    use_cases: "Original Serum DEX order book program, historical reference for CLOB-on-Solana"
-    primary_url: https://github.com/project-serum/serum-dex
-    github: { owner: project-serum, repo: serum-dex, include_readmes: true, include_source_code: true }
-
-  - id: gh-jupiter-plasma
-    name: GitHub Ellipsis-Labs/jupiter-plasma
-    kind: github
-    enabled: true
-    sections: [defi, programs]
-    use_cases: "Jupiter Plasma integration, AMM-style routing for Phoenix"
-    primary_url: https://github.com/Ellipsis-Labs/jupiter-plasma
-    github: { owner: Ellipsis-Labs, repo: jupiter-plasma, include_readmes: true, include_source_code: true }
 
   - id: gh-plasma
     name: GitHub Ellipsis-Labs/plasma
@@ -1306,15 +1152,6 @@ sources:
     primary_url: https://github.com/Ellipsis-Labs/phoenix-v1
     github: { owner: Ellipsis-Labs, repo: phoenix-v1, include_readmes: true, include_source_code: true }
 
-  - id: gh-ellipsis-spl
-    name: GitHub Ellipsis-Labs/solana-program-library
-    kind: github
-    enabled: true
-    sections: [tokens, programs]
-    use_cases: "Ellipsis Labs SPL fork, custom token program patterns"
-    primary_url: https://github.com/Ellipsis-Labs/solana-program-library
-    github: { owner: Ellipsis-Labs, repo: solana-program-library, include_readmes: true, include_source_code: true }
-
   - id: gh-jup-distributor
     name: GitHub jup-ag/distributor
     kind: github
@@ -1324,23 +1161,23 @@ sources:
     primary_url: https://github.com/jup-ag/distributor
     github: { owner: jup-ag, repo: distributor, include_readmes: true, include_source_code: true }
 
-  - id: gh-jup-raydium-cp-swap
-    name: GitHub jup-ag/raydium-cp-swap
+  - id: gh-raydium-cp-swap
+    name: GitHub raydium-io/raydium-cp-swap
     kind: github
     enabled: true
     sections: [defi, programs]
-    use_cases: "Raydium constant-product swap program (Jupiter fork), AMM swap implementation"
-    primary_url: https://github.com/jup-ag/raydium-cp-swap
-    github: { owner: jup-ag, repo: raydium-cp-swap, include_readmes: true, include_source_code: true }
+    use_cases: "Raydium constant-product swap program (CPMM), AMM swap implementation"
+    primary_url: https://github.com/raydium-io/raydium-cp-swap
+    github: { owner: raydium-io, repo: raydium-cp-swap, include_readmes: true, include_source_code: true }
 
-  - id: gh-jup-damm-v2
-    name: GitHub jup-ag/damm-v2
+  - id: gh-meteora-damm-v2
+    name: GitHub MeteoraAg/damm-v2
     kind: github
     enabled: true
     sections: [defi, programs]
-    use_cases: "Dynamic AMM v2 by Jupiter, advanced AMM design"
-    primary_url: https://github.com/jup-ag/damm-v2
-    github: { owner: jup-ag, repo: damm-v2, include_readmes: true, include_source_code: true }
+    use_cases: "Meteora Dynamic AMM v2 (DAMM v2) program, dynamic fees, advanced AMM design"
+    primary_url: https://github.com/MeteoraAg/damm-v2
+    github: { owner: MeteoraAg, repo: damm-v2, include_readmes: true, include_source_code: true }
 
   - id: gh-meteora-dynamic-fee-sharing
     name: GitHub MeteoraAg/dynamic-fee-sharing
@@ -1359,24 +1196,6 @@ sources:
     use_cases: "Meteora CPI integration examples, calling Meteora pools from your program"
     primary_url: https://github.com/MeteoraAg/cpi-examples
     github: { owner: MeteoraAg, repo: cpi-examples, include_readmes: true, include_source_code: true }
-
-  - id: gh-mango-v3
-    name: GitHub blockworks-foundation/mango-v3
-    kind: github
-    enabled: true
-    sections: [defi, programs]
-    use_cases: "Mango Markets v3 program source, perps and lending engine, historical reference"
-    primary_url: https://github.com/blockworks-foundation/mango-v3
-    github: { owner: blockworks-foundation, repo: mango-v3, include_readmes: true, include_source_code: true }
-
-  - id: gh-mango-v4
-    name: GitHub blockworks-foundation/mango-v4
-    kind: github
-    enabled: true
-    sections: [defi, programs]
-    use_cases: "Mango v4 perps + spot + lending program source, advanced risk engine"
-    primary_url: https://github.com/blockworks-foundation/mango-v4
-    github: { owner: blockworks-foundation, repo: mango-v4, include_readmes: true, include_source_code: true }
 
   # --- Additional Lending / Money markets ---
   - id: gh-klend
@@ -1397,15 +1216,6 @@ sources:
     primary_url: https://github.com/Kamino-Finance/scope
     github: { owner: Kamino-Finance, repo: scope, include_readmes: true, include_source_code: true }
 
-  - id: gh-solend-spl
-    name: GitHub solendprotocol/solana-program-library
-    kind: github
-    enabled: true
-    sections: [defi, programs]
-    use_cases: "Solend lending program (SPL fork), token lending pools, reserve management"
-    primary_url: https://github.com/solendprotocol/solana-program-library
-    github: { owner: solendprotocol, repo: solana-program-library, include_readmes: true, include_source_code: true }
-
   - id: gh-marginfi-v2
     name: GitHub 0dotxyz/marginfi-v2
     kind: github
@@ -1425,22 +1235,22 @@ sources:
     github: { owner: Lightprotocol, repo: light-protocol, include_readmes: true, include_source_code: true }
 
   - id: gh-zolana
-    name: GitHub helius-labs/zolana (Solana Privacy Rings)
+    name: GitHub helius-labs/privacy-rings (Solana Privacy Rings)
     kind: github
     enabled: true
     sections: [privacy, zk, programs]
     use_cases: "Solana Privacy Rings protocol (Zolana), shielded pool program, private program state with zero-knowledge proofs, ZK programs with Rust circuits that invoke the shielded pool, UtxoState, zolana build-zk-program, protocol spec, nullifier tree, ring policy"
-    primary_url: https://github.com/helius-labs/zolana
-    github: { owner: helius-labs, repo: zolana, include_readmes: true, include_source_code: false }
+    primary_url: https://github.com/helius-labs/privacy-rings
+    github: { owner: helius-labs, repo: privacy-rings, include_readmes: true, include_source_code: false }
 
   - id: gh-zolana-examples
-    name: GitHub helius-labs/zolana-examples (Solana Privacy Rings)
+    name: GitHub helius-labs/privacy-ring-examples (Solana Privacy Rings)
     kind: github
     enabled: true
     sections: [privacy, examples]
     use_cases: "Solana Privacy Rings example code, Rust and TypeScript clients for registering a private wallet, deposit, private transfer, withdraw, syncing private balances and reading private history, confidential swap and timelock escrow ZK programs on the shielded pool"
-    primary_url: https://github.com/helius-labs/zolana-examples
-    github: { owner: helius-labs, repo: zolana-examples, include_readmes: true, include_source_code: true }
+    primary_url: https://github.com/helius-labs/privacy-ring-examples
+    github: { owner: helius-labs, repo: privacy-ring-examples, include_readmes: true, include_source_code: true }
 
   - id: magicblock-payments-api
     name: MagicBlock Payments API (OpenAPI)
@@ -1460,15 +1270,6 @@ sources:
     use_cases: "Marinade liquid staking program source, mSOL minting, validator delegation logic"
     primary_url: https://github.com/marinade-finance/liquid-staking-program
     github: { owner: marinade-finance, repo: liquid-staking-program, include_readmes: true, include_source_code: true }
-
-  - id: gh-sanctum-spl-stake-pool
-    name: GitHub igneous-labs/sanctum-spl-stake-pool
-    kind: github
-    enabled: true
-    sections: [liquid-staking, programs]
-    use_cases: "Sanctum SPL stake pool fork, LST minting, stake pool program internals"
-    primary_url: https://github.com/igneous-labs/sanctum-spl-stake-pool
-    github: { owner: igneous-labs, repo: sanctum-spl-stake-pool, include_readmes: true, include_source_code: true }
 
   - id: gh-sanctum-s
     name: GitHub igneous-labs/S (Sanctum LST router)
@@ -1507,15 +1308,6 @@ sources:
     primary_url: https://github.com/solana-foundation/solana-record-service
     github: { owner: solana-foundation, repo: solana-record-service, include_readmes: true, include_source_code: true }
 
-  - id: gh-proof-of-identity
-    name: GitHub Nagaprasadvr/Proof-of-Identity
-    kind: github
-    enabled: true
-    sections: [identity, examples, programs]
-    use_cases: "Proof of Identity example program, basic identity attestation pattern"
-    primary_url: https://github.com/Nagaprasadvr/Proof-of-Identity
-    github: { owner: Nagaprasadvr, repo: Proof-of-Identity, include_readmes: true, include_source_code: true }
-
   - id: gh-lighthouse
     name: GitHub Jac0xb/lighthouse (transaction assertion)
     kind: github
@@ -1534,15 +1326,6 @@ sources:
     use_cases: "Squads smart-account program, programmable account abstraction, custom signing logic"
     primary_url: https://github.com/Squads-Protocol/smart-account-program
     github: { owner: Squads-Protocol, repo: smart-account-program, include_readmes: true, include_source_code: true }
-
-  - id: gh-squads-mesh
-    name: GitHub Squads-Protocol/mesh
-    kind: github
-    enabled: true
-    sections: [governance, wallets, programs]
-    use_cases: "Squads Mesh multisig variant, mesh of multisigs"
-    primary_url: https://github.com/Squads-Protocol/mesh
-    github: { owner: Squads-Protocol, repo: mesh, include_readmes: true, include_source_code: true }
 
   - id: gh-squads-grid-external-signature
     name: GitHub 0xRigel-squads/external-signature-program
@@ -1572,33 +1355,6 @@ sources:
     primary_url: https://github.com/helium/helium-program-library
     github: { owner: helium, repo: helium-program-library, include_readmes: true, include_source_code: true }
 
-  - id: gh-helium-tuktuk-fanout
-    name: GitHub helium/tuktuk-fanout
-    kind: github
-    enabled: true
-    sections: [programs]
-    use_cases: "Helium tuktuk fanout program, automated token distribution"
-    primary_url: https://github.com/helium/tuktuk-fanout
-    github: { owner: helium, repo: tuktuk-fanout, include_readmes: true, include_source_code: true }
-
-  - id: gh-helium-squads-program-upgrade
-    name: GitHub helium/squads-program-upgrade
-    kind: github
-    enabled: true
-    sections: [governance, programs]
-    use_cases: "Helium-style Squads program upgrade flow, gated program upgrades through multisig"
-    primary_url: https://github.com/helium/squads-program-upgrade
-    github: { owner: helium, repo: squads-program-upgrade, include_readmes: true, include_source_code: true }
-
-  - id: gh-zai-oft
-    name: GitHub ZaiXBT/zai-oft
-    kind: github
-    enabled: true
-    sections: [bridges, tokens, programs]
-    use_cases: "ZAI omnichain fungible token, LayerZero OFT integration on Solana"
-    primary_url: https://github.com/ZaiXBT/zai-oft
-    github: { owner: ZaiXBT, repo: zai-oft, include_readmes: true, include_source_code: true }
-
   - id: gh-metadao-programs
     name: GitHub metaDAOproject/programs
     kind: github
@@ -1616,33 +1372,6 @@ sources:
     use_cases: "Bonfida token vesting program, time-locked token release schedules"
     primary_url: https://github.com/Bonfida/token-vesting
     github: { owner: Bonfida, repo: token-vesting, include_readmes: true, include_source_code: true }
-
-  - id: gh-naga-state-ext
-    name: GitHub Nagaprasadvr/solana-state-ext-program
-    kind: github
-    enabled: true
-    sections: [examples, programs]
-    use_cases: "Solana state extension example program, dynamic account growth patterns"
-    primary_url: https://github.com/Nagaprasadvr/solana-state-ext-program
-    github: { owner: Nagaprasadvr, repo: solana-state-ext-program, include_readmes: true, include_source_code: true }
-
-  - id: gh-naga-p-ata
-    name: GitHub Nagaprasadvr/p-ata
-    kind: github
-    enabled: true
-    sections: [examples, tokens, programs]
-    use_cases: "Pinocchio-based ATA implementation, performance comparison vs SPL ATA"
-    primary_url: https://github.com/Nagaprasadvr/p-ata
-    github: { owner: Nagaprasadvr, repo: p-ata, include_readmes: true, include_source_code: true }
-
-  - id: gh-naga-pinocchio-vault
-    name: GitHub Nagaprasadvr/pinocchio-vault
-    kind: github
-    enabled: true
-    sections: [examples, frameworks, programs]
-    use_cases: "Pinocchio vault example, no-dependency vault program in Pinocchio"
-    primary_url: https://github.com/Nagaprasadvr/pinocchio-vault
-    github: { owner: Nagaprasadvr, repo: pinocchio-vault, include_readmes: true, include_source_code: true }
 
   # --- Community Q&A (LARGE, gated off by default) ---
   - id: solana-stackexchange
